@@ -9,3 +9,4 @@ class Home(LoginView):
     template_name = 'home.html'
 
 # Create your views here.
+
