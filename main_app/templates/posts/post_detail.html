@@ -1,0 +1,13 @@
+{% extends 'base.html' %} {% load static %} {% block head %}
+<!-- <link rel="stylesheet" href="{% static 'css/cats/post-detail.css' %}" /> -->
+{% endblock %} {% block content %}
+<section class="post-container">
+  <div class="post-img"></div>
+  <div class="post-details">
+    <h1>{{ post.title }}</h1>
+    <p>{{ post.body}}</p>
+    <p>{{ post.tags}}</p>
+  </div>
+</section>
+
+{% endblock %}
