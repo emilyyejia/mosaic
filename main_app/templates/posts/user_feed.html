@@ -8,7 +8,7 @@
 <section class="post-list">
   {% for post in posts %}
   <article class="post-item">
-    <h2><a href="{% url 'post-detail' post.id %}">{{ post.title }}</a></h2>
+    <h2><a href="{% url 'post_detail' post.id %}">{{ post.title }}</a></h2>
     <p>{{ post.body|truncatewords:30 }}</p>
     <p>Tags: {{ post.tags }}</p>
     <p>Posted by: {{ post.user.username }}</p>

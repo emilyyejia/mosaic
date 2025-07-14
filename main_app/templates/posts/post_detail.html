@@ -6,8 +6,12 @@
   <div class="post-details">
     <h1>{{ post.title }}</h1>
     <p>{{ post.body}}</p>
-    <p>{{ post.tags}}</p>
+    <p>{{ post.tags}}</p>  
   </div>
+  <div class="post-actions">
+      <a href="{% url 'post-update' post.id %}" class="btn warn">Edit</a>
+      <a href="{% url 'post-delete' post.id %}" class="btn danger">Delete</a>
+    </div>
 </section>
 
 {% endblock %}

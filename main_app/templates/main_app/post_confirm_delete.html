@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div style="
+  max-width: 500px;
+  margin: 3rem auto;
+  background: white;
+  padding: 2.5rem 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  text-align: center;
+">
+  <div class="page-header" style="margin-bottom: 2rem;">
+    <h1>Delete Post?</h1>
+  </div>
+
+  <h2 style="margin-bottom: 2rem; color: black;">
+    Are you sure you want to delete <strong>{{ object.name }}</strong>?
+  </h2>
+
+  <form action="" method="post" style="display: inline-block;">
+    {% csrf_token %}
+    <a href="{% url 'post_detail' object.id %}" class="btn secondary" style="margin-right: 1rem;">Cancel</a>
+    <button type="submit" class="btn danger">Yes - Delete!</button>
+  </form>
+</div>
+
+{% endblock %}
