@@ -1,0 +1,57 @@
+/* --- Home Section Styles --- */
+
+.home-section {
+  text-align: center;
+  padding: 4rem 1rem;
+  max-width: 900px;
+  margin: 0 auto;
+  font-size: 1.6rem;
+}
+
+.home-section h1 {
+  color: rgb(4, 216, 4);
+  font-size: 3.2rem;
+  margin-bottom: 2rem;
+}
+
+/* --- Login Form Styles --- */
+
+form.login {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+form.login h1 {
+  font-size: 1.8rem;
+  margin-bottom: 1.2rem;
+}
+
+form.login input[type="text"],
+form.login input[type="password"] {
+  width: 100%;
+  padding: 0.6rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+form.login button.btn.submit {
+  background-color: #2a6496;
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+form.login button.btn.submit:hover {
+  background-color: #1e90ff;
+}
