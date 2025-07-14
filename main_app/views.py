@@ -33,6 +33,13 @@ class PostCreate(LoginRequiredMixin, CreateView):
         form.instance.user = self.request.user  
         return super().form_valid(form)
 
+class PostUpdate(LoginRequiredMixin, UpdateView):
+    model = Post
+    fields = ['title', 'body', 'tags']
+
+class PostDelete(LoginRequiredMixin, DeleteView):
+    model = Post
+    success_url = '/user_feed/'
 
 def signup(request):
     error_message=''
