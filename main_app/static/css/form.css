@@ -1,0 +1,87 @@
+.page-header {
+  text-align: center;
+  margin: 3rem auto 2rem;
+  max-width: 800px;
+}
+
+.page-header h1 {
+  font-size: 2.6rem;
+  color: #357094;
+  margin-bottom: 1rem;
+}
+
+.page-header img {
+  width: 180px;
+  margin-top: 1rem;
+}
+
+.form-container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+  font-family: "Segoe UI", sans-serif;
+}
+
+.form-container table {
+  width: 100%;
+  border-spacing: 0;
+}
+
+.form-container td {
+  padding: 0.6rem 0;
+  vertical-align: top;
+}
+
+.form-container label {
+  display: block;
+  font-weight: 500;
+  font-size: 0.95rem;
+  margin-bottom: 0.4rem;
+  color: #444;
+}
+
+.form-container input[type="text"],
+.form-container input[type="password"],
+.form-container input[type="email"] {
+  width: 100%;
+  padding: 0.6rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #fafafa;
+  box-sizing: border-box;
+}
+
+.form-container input:focus {
+  outline: none;
+  border-color: #357094;
+}
+
+/* --- Submit Button --- */
+.form-container .btn.submit {
+  width: 100%;
+  margin-top: 1.5rem;
+  padding: 0.8rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 6px;
+  background-color: #357094;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.form-container .btn.submit:hover {
+  background-color: #2f5d61;
+}
+
+/* --- Error Message Styling --- */
+.red-text {
+  text-align: center;
+  color: #e53935;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}

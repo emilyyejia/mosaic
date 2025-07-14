@@ -1,27 +1,39 @@
-{% extends 'base.html' %}
-{% block content %}
+{% extends 'base.html' %} {% block content %}
 
-<div style="
-  max-width: 500px;
-  margin: 3rem auto;
-  background: white;
-  padding: 2.5rem 2rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  text-align: center;
-">
-  <div class="page-header" style="margin-bottom: 2rem;">
-    <h1>Delete Post?</h1>
-  </div>
-
-  <h2 style="margin-bottom: 2rem; color: black;">
+<div style="max-width: 500px; margin: 3rem auto; text-align: center">
+  <h1 style="color: #357094">Delete Post?</h1>
+  <p style="margin: 1.5rem 0; font-size: 1rem">
     Are you sure you want to delete <strong>{{ object.name }}</strong>?
-  </h2>
+  </p>
 
-  <form action="" method="post" style="display: inline-block;">
+  <form method="post">
     {% csrf_token %}
-    <a href="{% url 'post_detail' object.id %}" class="btn secondary" style="margin-right: 1rem;">Cancel</a>
-    <button type="submit" class="btn danger">Yes - Delete!</button>
+    <a
+      href="{% url 'post_detail' object.id %}"
+      style="
+        padding: 0.5rem 1rem;
+        margin-right: 1rem;
+        text-decoration: none;
+        background: #ddd;
+        color: #333;
+        border-radius: 4px;
+      "
+      >Cancel</a
+    >
+
+    <button
+      type="submit"
+      style="
+        padding: 0.5rem 1rem;
+        background: #d9534f;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      "
+    >
+      Yes - Delete!
+    </button>
   </form>
 </div>
 

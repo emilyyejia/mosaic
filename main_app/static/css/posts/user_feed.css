@@ -1,0 +1,54 @@
+.page-header {
+  text-align: center;
+  margin: 3rem 0 2rem;
+}
+
+.page-header h1 {
+  font-size: 2.4rem;
+  color: #357094;
+  font-weight: 600;
+}
+
+.post-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  padding: 0 1rem;
+  max-width: 1200px;
+  margin: 0 auto 4rem;
+}
+
+.post-item {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  padding: 1.5rem;
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+  border: 1px solid #eaeaea;
+}
+
+.post-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.post-item h2 {
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+}
+
+.post-item h2 a {
+  color: #357094;
+  text-decoration: none;
+}
+
+.post-item h2 a:hover {
+  color: #2a5e7a;
+  text-decoration: underline;
+}
+
+.post-item p {
+  font-size: 0.95rem;
+  color: #444;
+  margin-bottom: 0.6rem;
+}
