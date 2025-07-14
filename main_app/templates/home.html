@@ -1,14 +1,6 @@
-{% extends 'base.html' %} {% load static %} {% block head %} {% endblock %} 
-{% block content %}
-<section
-  style="
-    text-align: center;
-    padding: 4rem 1rem;
-    max-width: 900px;
-    margin: 0 auto;
-    font-size: 1.6rem;
-  "
->
+{% extends 'base.html' %} {% load static %} {% block head %} {% endblock %} {%
+block content %}
+<section class="home-section">
   <h1 style="color: rgb(4, 216, 4); font-size: 3.2rem; margin-bottom: 2rem">
     Welcome to Mosaic!
   </h1>
@@ -21,7 +13,7 @@
       <button type="submit" class="btn submit">Login</button>
     </form>
   </section>
-{% endif %}
+  {% endif %}
 </section>
 
 {% endblock %}
