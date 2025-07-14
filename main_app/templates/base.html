@@ -8,34 +8,33 @@
     <link rel="shortcut icon" type="image/png" href="" />
     <!-- <link rel="stylesheet" href="{% static 'css/base.css' %}" /> -->
     <title>Mosaic</title>
-    {% block head %} 
-    {% endblock %}
+    {% block head %} {% endblock %}
   </head>
   <body>
     <header>
       <div class="header-logo-container">
-        <a href="{% url 'home'%}">
-         
-        </a>
+        <a href="{% url 'home'%}"> </a>
       </div>
       <nav>
         <ul>
-{% if user.is_authenticated %}
-  <li>
-    <form id="logout-form" method="post" action="{% url 'logout' %}">
-      {% csrf_token %}
-      <button type="submit">Log out</button>
-    </form>
-  </li>            {% else %}
+          {% if user.is_authenticated %}
+          <li>
+            <form id="logout-form" method="post" action="{% url 'logout' %}">
+              {% csrf_token %}
+              <button type="submit">Log out</button>
+            </form>
+          </li>
+          <li><a href="{% url 'user_feed' %}">All Posts</a></li>
+          <li><a href="{% url 'post-create' %}">Create Post</a></li>
+          {% else %}
+
           <li><a href="{% url 'home' %}">Login</a></li>
           <li><a href="{% url 'signup' %}">Signup</a></li>
-            {% endif %}
+
+          {% endif %}
         </ul>
       </nav>
     </header>
-    <main>
-     {% block content %} 
-     {% endblock %}
-     </main>
+    <main>{% block content %} {% endblock %}</main>
   </body>
 </html>

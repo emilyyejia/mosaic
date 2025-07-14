@@ -14,9 +14,21 @@ class Home(LoginView):
     template_name = 'home.html'
 
 # Create your views here.
+
+@login_required
+def user_feed(request):
+    posts = Post.objects.filter(user=request.user)
+    return render(request, 'posts/user_feed.html', {'posts': posts})
+
+def post_detail(request, post_id):  
+    post = Post.objects.get(id=post_id)
+    return render(request, 'posts/post_detail.html', {'post': post})
+    
+
 class PostCreate(LoginRequiredMixin, CreateView):
     model = Post
     fields = ['title', 'body', 'tags']
+    # success_url = '/user_feed/'
     def form_valid(self, form):
         form.instance.user = self.request.user  
         return super().form_valid(form)
