@@ -6,39 +6,43 @@
     <h1>{{ post.title }}</h1>
     <p>{{ post.body}}</p>
     <p>{{ post.tags}}</p>
+    {% if post.image %}
+    <img src="{{ post.image.url }}" alt="{{ post.title }}" class="post-img" />
+    {% endif %}
   </div>
   <div class="post-actions">
     <a href="{% url 'post-update' post.id %}" class="btn warn">Edit</a>
     <a href="{% url 'post-delete' post.id %}" class="btn danger">Delete</a>
   </div>
- <div class="comments-container">
-  {% for comment in post.comment_set.all %}
-  <div class="comment-item">
-    <div class="comment-header">
-      <span class="comment-user">{{ comment.user.username }}</span>
-      <span class="comment-date">{{ comment.date|date:"M d, Y" }}</span>
-      {% if comment.user == request.user %}
+  <div class="comments-container">
+    {% for comment in post.comment_set.all %}
+    <div class="comment-item">
+      <div class="comment-header">
+        <span class="comment-user">{{ comment.user.username }}</span>
+        <span class="comment-date">{{ comment.date|date:"M d, Y" }}</span>
+        {% if comment.user == request.user %}
         <span class="comment-actions">
           <a href="{% url 'comment-edit' comment.id %}">Edit</a> |
           <a href="{% url 'comment-delete' comment.id %}">Delete</a>
         </span>
         {% endif %}
+      </div>
+      <div class="comment-text">{{ comment.text }}</div>
     </div>
-    <div class="comment-text">
-      {{ comment.text }}
-    </div>
+    {% empty %}
+    <p>No comments yet. Be the first to comment!</p>
+    {% endfor %}
   </div>
-  {% empty %}
-  <p>No comments yet. Be the first to comment!</p>
-  {% endfor %}
-</div>
 
-<form action="{% url 'add-comment' post.id %}" method="post" class="comment-form" autocomplete="off">
-  {% csrf_token %}
-  {{ comment_form.text }}
-  <button type="submit" class="btn submit">Add Comment</button>
-</form>
-
+  <form
+    action="{% url 'add-comment' post.id %}"
+    method="post"
+    class="comment-form"
+    autocomplete="off"
+  >
+    {% csrf_token %} {{ comment_form.text }}
+    <button type="submit" class="btn submit">Add Comment</button>
+  </form>
 </section>
 
 {% endblock %}

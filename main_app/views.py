@@ -29,7 +29,7 @@ def post_detail(request, post_id):
 
 class PostCreate(LoginRequiredMixin, CreateView):
     model = Post
-    fields = ['title', 'body', 'tags']
+    fields = ['title', 'body', 'tags', 'image']
     # success_url = '/user_feed/'
     def form_valid(self, form):
         form.instance.user = self.request.user  
