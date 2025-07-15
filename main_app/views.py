@@ -60,6 +60,32 @@ def user_posts(request):
     return render(request, 'posts/user_posts.html') 
 
 @login_required
-def all_posts_feed(request):
+def user_feed(request):
     posts = Post.objects.all()
-    return render(request, 'posts/user_feed.html', {'posts': posts})
+
+    continents = ["Africa", "Asia", "Europe", "North America", "South America", "Australia", "Antarctica"]
+    countries = ["United States", "Canada", "United Kingdom", "Germany", "Japan", "Australia"]
+
+    selected_continents = request.GET.getlist('continents')
+    selected_countries = request.GET.getlist('countries')
+
+    if selected_continents:
+        posts = posts.filter(location__in=selected_continents)
+    if selected_countries:
+        posts = posts.filter(location__in=selected_countries)
+
+    sort = request.GET.get('sort', 'recent')
+    if sort == 'recent':
+        posts = posts.order_by('-created_at')
+    elif sort == 'oldest':
+        posts = posts.order_by('created_at')
+
+    context = {
+        'posts': posts,
+        'continents': continents,
+        'countries': countries,
+        'selected_continents': selected_continents,
+        'selected_countries': selected_countries,
+        'sort': sort,
+    }
+    return render(request, 'posts/user_feed.html', context)
