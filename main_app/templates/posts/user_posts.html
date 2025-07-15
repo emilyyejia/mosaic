@@ -15,7 +15,6 @@
     <p>{{ post.body|truncatewords:30 }}</p>
     <p>Tags: {{ post.tags }}</p>
      <p>Country: {{ post.country.name }}</p>
-
     <p>Posted by: {{ post.user.username }}</p>
   </article>
   {% empty %}
