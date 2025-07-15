@@ -1,54 +1,129 @@
-.page-header {
+/* Container for page header and posts list - centered text */
+.page-header,
+.post-list {
+  max-width: 900px;
+  margin: 0 auto;
   text-align: center;
-  margin: 3rem 0 2rem;
+  padding: 1rem 1rem;
 }
 
-.page-header h1 {
-  font-size: 2.4rem;
-  color: #357094;
-  font-weight: 600;
+/* Container for filter/search form - centered horizontally but text left aligned */
+.filter-search {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1rem;
+  text-align: left;
 }
+
+/* Make the form a flex container for horizontal layout */
+.feed-filters {
+  display: flex;
+  flex-wrap: wrap;         /* wrap on small screens */
+  gap: 1rem;               /* space between items */
+  align-items: center;     /* vertically center items */
+  justify-content: center; /* center horizontally */
+  margin: 0 auto;
+  max-width: 900px;
+}
+
+/* Keep labels and inputs inline with small margin */
+.feed-filters label {
+  margin-right: 0.5rem;
+  white-space: nowrap; /* prevent label wrapping */
+}
+
+/* Inputs, selects and buttons inline with consistent height */
+.feed-filters input[type="text"],
+.feed-filters select,
+.feed-filters button,
+.feed-filters input[type="checkbox"] {
+  margin: 0;
+  vertical-align: middle;
+  height: 2rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 1rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+/* Multiple select box size */
+.feed-filters select[multiple] {
+  max-width: 200px;
+  min-width: 150px;
+  height: 5rem;
+  vertical-align: middle;
+}
+
+/* Style the button */
+.feed-filters button {
+  cursor: pointer;
+  background-color: #0d6efd; /* Bootstrap blue */
+  border: none;
+  color: white;
+  padding: 0.4rem 1rem;
+  border-radius: 4px;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+  height: 2.5rem;
+}
+
+.feed-filters button:hover {
+  background-color: #084298;
+}
+
+.post-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  max-width: 700px;
+  margin: 1rem auto;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fafafa;
+  text-align: left;
+}
+
+.post-card-link:hover {
+  background: #f0f8ff;
+  border-color: #0d6efd; 
+}
+
 
 .post-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
+  max-width: 900px;
+  margin: 0 auto 2rem auto;
   padding: 0 1rem;
-  max-width: 1200px;
-  margin: 0 auto 4rem;
 }
 
-.post-item {
-  background-color: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  padding: 1.5rem;
-  transition: box-shadow 0.3s ease, transform 0.2s ease;
-  border: 1px solid #eaeaea;
-}
-
-.post-item:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-}
 
 .post-item h2 {
-  font-size: 1.4rem;
-  margin-bottom: 1rem;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-size: 1.6rem;
+  font-weight: 700;
 }
 
 .post-item h2 a {
-  color: #357094;
   text-decoration: none;
+  color: #0d6efd; 
+  transition: color 0.3s ease;
 }
 
 .post-item h2 a:hover {
-  color: #2a5e7a;
-  text-decoration: underline;
+  color: #084298;
+  
 }
 
 .post-item p {
-  font-size: 0.95rem;
-  color: #444;
-  margin-bottom: 0.6rem;
+  margin: 0.3rem 0;
+  color: #333;
+  line-height: 1.4;
+  font-size: 1rem;
+}
+
+.post-item p:last-child {
+  font-style: italic;
+  font-size: 0.9rem;
+  color: #555;
 }
