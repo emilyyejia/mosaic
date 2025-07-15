@@ -1,56 +1,146 @@
 {% extends 'base.html' %}
 {% load static %}
+
 {% block head %}
 <link rel="stylesheet" href="{% static 'css/posts/user_feed.css' %}" />
 {% endblock %}
+
 {% block content %}
 <section class="page-header">
   <h1>My Feed (All Posts)</h1>
 </section>
+
 <section class="filter-search">
-<form method="get" class="feed-filters">
-  <label for="search">Search posts:</label><br>
-  <label>
-  <input type="checkbox" name="tags_only" {% if request.GET.tags_only %}checked{% endif %}>
-  Tags:
-</label>
-<input type="text" name="q" id="search" value="{{ request.GET.q }}"><br><br>
-  <fieldset>
-    <legend>Continents</legend>
-    {% for cont in continents %}
+  <form method="get" class="feed-filters">
+    <fieldset>
+      <legend>Search</legend>
+      <input type="text" name="q" placeholder="Search posts..." value="{{ query }}">
       <label>
-        <input type="checkbox" name="continents" value="{{ cont }}"
-    {% if cont in selected_continents %}checked{% endif %}>
-    {{ cont }}
-</label><br>
-    {% endfor %}
-  </fieldset>
+        <input type="checkbox" name="tags_only" {% if tags_only %}checked{% endif %}>
+        Tags only
+      </label>
+    </fieldset>
 
-  <label for="countries">Countries</label><br>
-  <select name="countries" id="countries" multiple>
-    {% for country in countries %}
-      <option value="{{ country }}"
-        {% if country in selected_countries %}selected{% endif %}>
-        {{ country }}
-      </option>
-    {% endfor %}
-  </select><br><br>
+    <div class="filter-row">
+      <fieldset>
+        <legend>Continent</legend>
+        <select id="continent-select" name="continent">
+          <option value="">All Continents</option>
+          {% for cont in continents %}
+            <option value="{{ cont }}" {% if cont == selected_continent %}selected{% endif %}>{{ cont }}</option>
+          {% endfor %}
+        </select>
+      </fieldset>
 
-  <button type="submit">Apply Filters</button>
-</form>
+      <fieldset>
+        <legend>Country</legend>
+        <select id="country-select" name="country">
+          <option value="">All Countries</option>
+          {% for code, name in countries %}
+            <option value="{{ code }}" {% if code == selected_country %}selected{% endif %}>{{ name }}</option>
+          {% endfor %}
+        </select>
+      </fieldset>
+    </div>
+
+    <fieldset>
+      <legend>Sort</legend>
+      <select name="sort">
+        <option value="recent" {% if sort == "recent" %}selected{% endif %}>Most Recent</option>
+        <option value="oldest" {% if sort == "oldest" %}selected{% endif %}>Oldest First</option>
+      </select>
+    </fieldset>
+
+    <button type="submit">Apply</button>
+  </form>
 </section>
+
 <section class="post-list">
   {% for post in posts %}
-<a href="{% url 'post_detail' post.id %}" class="post-card-link">
-  <article class="post-item">
-    <h2>{{ post.title }}</h2>
-    <p>{{ post.body|truncatewords:30 }}</p>
-    <p>Tags: {{ post.tags }}</p>
-    <p>Posted by: {{ post.user.username }}</p>
-  </article>
-</a>
+    <a href="{% url 'post_detail' post.id %}" class="post-card-link">
+      <article class="post-item">
+        <h2>{{ post.title }}</h2>
+        <p>{{ post.body|truncatewords:30 }}</p>
+        <p>Tags: {{ post.tags }}</p>
+        <p>Country: {{ post.country.name }}</p>
+        <p>Posted by: {{ post.user.username }}</p>
+      </article>
+    </a>
   {% empty %}
-  <p>No posts available.</p>
+    <p>No posts available.</p>
   {% endfor %}
 </section>
+
+{{ country_name_map|json_script:"countryNameMap" }}
+
+<script>
+const nameMap = JSON.parse(document.getElementById('countryNameMap').textContent);
+
+const continentCountries = {
+  'Africa': [
+    'DZ', 'AO', 'BJ', 'BW', 'BF', 'BI', 'CM', 'CV', 'CF', 'TD', 'KM',
+    'CG', 'CD', 'CI', 'DJ', 'EG', 'GQ', 'ER', 'ET', 'GA', 'GM', 'GH',
+    'GN', 'GW', 'KE', 'LS', 'LR', 'LY', 'MG', 'MW', 'ML', 'MR', 'MU',
+    'MA', 'MZ', 'NA', 'NE', 'NG', 'RW', 'ST', 'SN', 'SC', 'SL', 'SO',
+    'ZA', 'SS', 'SD', 'SZ', 'TZ', 'TG', 'TN', 'UG', 'EH', 'ZM', 'ZW'
+  ],
+  'Asia': [
+    'AF', 'AM', 'AZ', 'BH', 'BD', 'BT', 'BN', 'KH', 'CN', 'CY', 'GE',
+    'IN', 'ID', 'IR', 'IQ', 'IL', 'JP', 'JO', 'KZ', 'KW', 'KG', 'LA',
+    'LB', 'MY', 'MV', 'MN', 'MM', 'NP', 'KP', 'OM', 'PK', 'PS', 'PH',
+    'QA', 'SA', 'SG', 'KR', 'LK', 'SY', 'TJ', 'TH', 'TL', 'TR', 'TM',
+    'AE', 'UZ', 'VN', 'YE'
+  ],
+  'Europe': [
+    'AL', 'AD', 'AT', 'BY', 'BE', 'BA', 'BG', 'HR', 'CY', 'CZ', 'DK',
+    'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 'IS', 'IE', 'IT', 'LV', 'LI',
+    'LT', 'LU', 'MT', 'MD', 'MC', 'ME', 'NL', 'MK', 'NO', 'PL', 'PT',
+    'RO', 'RU', 'SM', 'RS', 'SK', 'SI', 'ES', 'SE', 'CH', 'UA', 'GB',
+    'VA'
+  ],
+  'North America': [
+    'AG', 'BS', 'BB', 'BZ', 'CA', 'CR', 'CU', 'DM', 'DO', 'SV', 'GD',
+    'GT', 'HT', 'HN', 'JM', 'MX', 'NI', 'PA', 'KN', 'LC', 'VC', 'TT',
+    'US'
+  ],
+  'South America': [
+    'AR', 'BO', 'BR', 'CL', 'CO', 'EC', 'GY', 'PY', 'PE', 'SR', 'UY', 'VE'
+  ],
+  'Australia': [
+    'AU', 'FJ', 'KI', 'MH', 'FM', 'NR', 'NZ', 'PW', 'PG', 'WS', 'SB', 'TO', 'TV', 'VU'
+  ],
+  'Antarctica': [
+    'AQ'
+  ]
+};
+
+document.getElementById('continent-select').addEventListener('change', function() {
+  const continent = this.value;
+  const countrySelect = document.getElementById('country-select');
+
+  countrySelect.innerHTML = '<option value="">All Countries</option>';
+
+  if (!continent || !continentCountries[continent]) {
+    for (const code in nameMap) {
+      const option = document.createElement('option');
+      option.value = code;
+      option.textContent = nameMap[code];
+      countrySelect.appendChild(option);
+    }
+  } else {
+    continentCountries[continent].forEach(function(code) {
+      const option = document.createElement('option');
+      option.value = code;
+      option.textContent = nameMap[code] || code;
+      countrySelect.appendChild(option);
+    });
+  }
+  $('#country-select').select2('destroy');
+});
+$(document).ready(function() {
+  $('#continent-select').select2({ placeholder: "Select Continent", allowClear: true });
+  $('#country-select').select2({ placeholder: "Select Country", allowClear: true });
+});
+</script>
+
 {% endblock %}

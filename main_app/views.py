@@ -9,17 +9,53 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
+from django_countries import countries
+
+
+#country dictionary
+CONTINENT_COUNTRIES = {
+  'Africa': [
+    'DZ', 'AO', 'BJ', 'BW', 'BF', 'BI', 'CM', 'CV', 'CF', 'TD', 'KM',
+    'CG', 'CD', 'CI', 'DJ', 'EG', 'GQ', 'ER', 'ET', 'GA', 'GM', 'GH',
+    'GN', 'GW', 'KE', 'LS', 'LR', 'LY', 'MG', 'MW', 'ML', 'MR', 'MU',
+    'MA', 'MZ', 'NA', 'NE', 'NG', 'RW', 'ST', 'SN', 'SC', 'SL', 'SO',
+    'ZA', 'SS', 'SD', 'SZ', 'TZ', 'TG', 'TN', 'UG', 'EH', 'ZM', 'ZW'
+  ],
+  'Asia': [
+    'AF', 'AM', 'AZ', 'BH', 'BD', 'BT', 'BN', 'KH', 'CN', 'CY', 'GE',
+    'IN', 'ID', 'IR', 'IQ', 'IL', 'JP', 'JO', 'KZ', 'KW', 'KG', 'LA',
+    'LB', 'MY', 'MV', 'MN', 'MM', 'NP', 'KP', 'OM', 'PK', 'PS', 'PH',
+    'QA', 'SA', 'SG', 'KR', 'LK', 'SY', 'TJ', 'TH', 'TL', 'TR', 'TM',
+    'AE', 'UZ', 'VN', 'YE'
+  ],
+  'Europe': [
+    'AL', 'AD', 'AT', 'BY', 'BE', 'BA', 'BG', 'HR', 'CY', 'CZ', 'DK',
+    'EE', 'FI', 'FR', 'DE', 'GR', 'HU', 'IS', 'IE', 'IT', 'LV', 'LI',
+    'LT', 'LU', 'MT', 'MD', 'MC', 'ME', 'NL', 'MK', 'NO', 'PL', 'PT',
+    'RO', 'RU', 'SM', 'RS', 'SK', 'SI', 'ES', 'SE', 'CH', 'UA', 'GB',
+    'VA'
+  ],
+  'North America': [
+    'AG', 'BS', 'BB', 'BZ', 'CA', 'CR', 'CU', 'DM', 'DO', 'SV', 'GD',
+    'GT', 'HT', 'HN', 'JM', 'MX', 'NI', 'PA', 'KN', 'LC', 'VC', 'TT',
+    'US'
+  ],
+  'South America': [
+    'AR', 'BO', 'BR', 'CL', 'CO', 'EC', 'GY', 'PY', 'PE', 'SR', 'UY', 'VE'
+  ],
+  'Australia': [
+    'AU', 'FJ', 'KI', 'MH', 'FM', 'NR', 'NZ', 'PW', 'PG', 'WS', 'SB', 'TO', 'TV', 'VU'
+  ],
+  'Antarctica': [
+    'AQ'
+  ]}
+
 # Define the home view function
 class Home(LoginView):
     # Send a simple HTML response
     template_name = 'home.html'
 
 # Create your views here.
-
-@login_required
-def user_feed(request):
-    posts = Post.objects.filter(user=request.user)
-    return render(request, 'posts/user_feed.html', {'posts': posts})
 
 def post_detail(request, post_id):  
     post = Post.objects.get(id=post_id)
@@ -29,7 +65,7 @@ def post_detail(request, post_id):
 
 class PostCreate(LoginRequiredMixin, CreateView):
     model = Post
-    fields = ['title', 'body', 'tags', 'image']
+    fields = ['title', 'body', 'tags', 'country', 'image']
     # success_url = '/user_feed/'
     def form_valid(self, form):
         form.instance.user = self.request.user  
@@ -37,7 +73,7 @@ class PostCreate(LoginRequiredMixin, CreateView):
 
 class PostUpdate(LoginRequiredMixin, UpdateView):
     model = Post
-    fields = ['title', 'body', 'tags']
+    fields = ['title', 'body', 'tags', 'country']
 
 class PostDelete(LoginRequiredMixin, DeleteView):
     model = Post
@@ -62,44 +98,50 @@ def user_posts(request):
     posts = Post.objects.filter(user=request.user)
     return render(request, 'posts/user_posts.html', {'posts': posts})
 
+
 @login_required
 def user_feed(request):
     posts = Post.objects.all()
-
-    continents = ["Africa", "Asia", "Europe", "North America", "South America", "Australia", "Antarctica"]
-    countries = ["United States", "Canada", "United Kingdom", "Germany", "Japan", "Australia"]
-
-    selected_continents = request.GET.getlist('continents')
-    selected_countries = request.GET.getlist('countries')
-    query = request.GET.get('q', '').strip()
+    selected_continent = request.GET.get("continent")
+    selected_country = request.GET.get("country")
+    query = request.GET.get("q", "").strip()
     tags_only = request.GET.get("tags_only")
-    if selected_continents:
-        posts = posts.filter(location__in=selected_continents)
-    if selected_countries:
-        posts = posts.filter(location__in=selected_countries)
+    sort = request.GET.get("sort", "recent")
+    continents = list(CONTINENT_COUNTRIES.keys())
+    all_countries = list(countries)
+    country_name_map = {code: name for code, name in all_countries}
+    if selected_continent:
+        codes_in_continent = CONTINENT_COUNTRIES.get(selected_continent, [])
+        filtered_countries = [(code, name) for code, name in all_countries if code in codes_in_continent]
+    else:
+        filtered_countries = all_countries
+    if selected_country:
+        posts = posts.filter(country=selected_country)
     if query:
         if tags_only:
-            posts= posts.filter(tags__icontains=query)
-        posts = posts.filter(
-            Q(title__icontains=query) |
-            Q(body__icontains=query) |
-            Q(tags__icontains=query)
-        )
-    sort = request.GET.get('sort', 'recent')
-    if sort == 'recent':
-        posts = posts.order_by('-created_at')
-    elif sort == 'oldest':
-        posts = posts.order_by('created_at')
-
+            posts = posts.filter(tags__icontains=query)
+        else:
+            posts = posts.filter(
+                Q(title__icontains=query) |
+                Q(body__icontains=query) |
+                Q(tags__icontains=query)
+            )
+    if sort == "recent":
+        posts = posts.order_by("-created_at")
+    elif sort == "oldest":
+        posts = posts.order_by("created_at")
     context = {
-        'posts': posts,
-        'continents': continents,
-        'countries': countries,
-        'selected_continents': selected_continents,
-        'selected_countries': selected_countries,
-        'sort': sort,
+        "posts": posts,
+        "continents": continents,
+        "countries": filtered_countries,
+        "selected_continent": selected_continent,
+        "selected_country": selected_country,
+        "query": query,
+        "tags_only": tags_only,
+        "sort": sort,
+        "country_name_map":country_name_map,
     }
-    return render(request, 'posts/user_feed.html', context)
+    return render(request, "posts/user_feed.html", context)
 
 @login_required
 def add_comment(request, post_id):
