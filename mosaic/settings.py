@@ -15,8 +15,10 @@ from pathlib import Path
 # Newly added to process a .env's secrets...
 import os
 import environ 
-environ.Env()
-environ.Env.read_env()
+env= environ.Env()
+BASE_DIR = Path(__file__).resolve().parent.parent
+env.read_env(env_file=BASE_DIR / '.env')
+print("DB_USER from env:", env("DB_USER", default="NOT FOUND"))
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -83,9 +85,9 @@ DATABASES = {
     'default': {
       'ENGINE': 'django.db.backends.postgresql',
       'NAME': 'mosaic',
-      'USER': os.environ['DB_USER'],
-      'PASSWORD': os.environ['DB_PW'],
-      'HOST': os.environ['DB_HOST'],
+      'USER': env('DB_USER'),
+      'PASSWORD': env('DB_PW'),
+      'HOST': env('DB_HOST'),
       'PORT': '5432',
     }
 }

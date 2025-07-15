@@ -8,7 +8,7 @@ from .forms import CommentForm
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-
+from django.db.models import Q
 # Define the home view function
 class Home(LoginView):
     # Send a simple HTML response
@@ -70,12 +70,20 @@ def user_feed(request):
 
     selected_continents = request.GET.getlist('continents')
     selected_countries = request.GET.getlist('countries')
-
+    query = request.GET.get('q', '').strip()
+    tags_only = request.GET.get("tags_only")
     if selected_continents:
         posts = posts.filter(location__in=selected_continents)
     if selected_countries:
         posts = posts.filter(location__in=selected_countries)
-
+    if query:
+        if tags_only:
+            posts= posts.filter(tags__icontains=query)
+        posts = posts.filter(
+            Q(title__icontains=query) |
+            Q(body__icontains=query) |
+            Q(tags__icontains=query)
+        )
     sort = request.GET.get('sort', 'recent')
     if sort == 'recent':
         posts = posts.order_by('-created_at')
