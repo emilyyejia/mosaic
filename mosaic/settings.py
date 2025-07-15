@@ -11,18 +11,20 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
-
+BASE_DIR = Path(__file__).resolve().parent.parent
 # Newly added to process a .env's secrets...
 import os
 import environ 
-env= environ.Env()
-BASE_DIR = Path(__file__).resolve().parent.parent
+env = environ.Env()
 env.read_env(env_file=BASE_DIR / '.env')
-print("DB_USER from env:", env("DB_USER", default="NOT FOUND"))
+# env= environ.Env()
+# BASE_DIR = Path(__file__).resolve().parent.parent
+# env.read_env(env_file=BASE_DIR / '.env')
+# print("DB_USER from env:", env("DB_USER", default="NOT FOUND"))
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+
 
 
 # Quick-start development settings - unsuitable for production
