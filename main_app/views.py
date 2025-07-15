@@ -3,7 +3,8 @@ from django.contrib.auth.views import LoginView
 from django.views.generic import ListView, DetailView, CreateView
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
-from .models import Post
+from .models import Post, Comment
+from .forms import CommentForm
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -22,7 +23,8 @@ def user_feed(request):
 
 def post_detail(request, post_id):  
     post = Post.objects.get(id=post_id)
-    return render(request, 'posts/post_detail.html', {'post': post})
+    comment_form = CommentForm()
+    return render(request, 'posts/post_detail.html', {'post': post, 'comment_form': comment_form})
     
 
 class PostCreate(LoginRequiredMixin, CreateView):
@@ -89,3 +91,36 @@ def user_feed(request):
         'sort': sort,
     }
     return render(request, 'posts/user_feed.html', context)
+
+@login_required
+def add_comment(request, post_id):
+    form = CommentForm(request.POST)
+    if form.is_valid():
+        new_comment = form.save(commit=False)
+        new_comment.post_id = post_id
+        new_comment.user = request.user
+        new_comment.save()
+    return redirect('post_detail', post_id = post_id)
+
+class CommentUpdate(LoginRequiredMixin, UpdateView):
+    model = Comment
+    fields = ['text']
+    template_name = 'main_app/comment_form.html'
+
+    def get_success_url(self):
+        return self.object.post.get_absolute_url()
+    def test_func(self):
+        comment = self.get_object()
+        return self.request.user == comment.user
+    
+
+class CommentDelete(LoginRequiredMixin, DeleteView):
+    model = Comment
+    template_name = 'main_app/comment_confirm_delete.html'
+
+    def get_success_url(self):
+        return self.object.post.get_absolute_url()
+    def test_func(self):
+        comment = self.get_object()
+        return self.request.user == comment.user
+    

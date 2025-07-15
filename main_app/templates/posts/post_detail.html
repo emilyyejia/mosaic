@@ -11,33 +11,34 @@
     <a href="{% url 'post-update' post.id %}" class="btn warn">Edit</a>
     <a href="{% url 'post-delete' post.id %}" class="btn danger">Delete</a>
   </div>
-  <div class="feedings-toy-container">
-  <section class="feedings">
-    <div class="subsection-title">
-      <h2>Comments</h2>
+ <div class="comments-container">
+  {% for comment in post.comment_set.all %}
+  <div class="comment-item">
+    <div class="comment-header">
+      <span class="comment-user">{{ comment.user.username }}</span>
+      <span class="comment-date">{{ comment.date|date:"M d, Y" }}</span>
+      {% if comment.user == request.user %}
+        <span class="comment-actions">
+          <a href="{% url 'comment-edit' comment.id %}">Edit</a> |
+          <a href="{% url 'comment-delete' comment.id %}">Delete</a>
+        </span>
+        {% endif %}
     </div>
-    <table>
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Comment</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for comment in post.comment_set.all %}
-          <tr>
-            <td>{{comment.date}}</td>
-            <td>{{comment.text}}</td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </section>
+    <div class="comment-text">
+      {{ comment.text }}
+    </div>
+  </div>
+  {% empty %}
+  <p>No comments yet. Be the first to comment!</p>
+  {% endfor %}
 </div>
+
+<form action="{% url 'add-comment' post.id %}" method="post" class="comment-form" autocomplete="off">
+  {% csrf_token %}
+  {{ comment_form.text }}
+  <button type="submit" class="btn submit">Add Comment</button>
+</form>
+
 </section>
 
-
-
 {% endblock %}
-
-
