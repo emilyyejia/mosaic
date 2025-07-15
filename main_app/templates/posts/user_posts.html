@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/posts/user_feed.css' %}" />
+{% endblock %}
+{% block content %}
+<h1>Welcome, {{ user.username }}!</h1>
+<p>My posts</p>
+</section>
+
+<section class="post-list">
+  {% for post in posts %}
+  <article class="post-item">
+    <h2><a href="{% url 'post_detail' post.id %}">{{ post.title }}</a></h2>
+    <p>{{ post.body|truncatewords:30 }}</p>
+    <p>Tags: {{ post.tags }}</p>
+    <p>Posted by: {{ post.user.username }}</p>
+  </article>
+  {% empty %}
+  <p>No posts available.</p>
+  {% endfor %} {% endblock %}
+</section>

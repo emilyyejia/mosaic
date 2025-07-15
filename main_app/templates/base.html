@@ -24,7 +24,8 @@
               <button type="submit">Log out</button>
             </form>
           </li>
-          <li><a href="{% url 'user_feed' %}">All Posts</a></li>
+          <li><a href="{% url 'user_feed' %}">My feed</a></li>
+          <li><a href="{% url 'user_posts' %}">My Posts</a></li>
           <li><a href="{% url 'post-create' %}">Create Post</a></li>
           {% else %}
 

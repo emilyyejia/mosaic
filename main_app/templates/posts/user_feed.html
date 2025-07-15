@@ -1,10 +1,38 @@
-{% extends 'base.html' %} {% load static %} {% block head %}
+{% extends 'base.html' %}
+{% load static %}
+{% block head %}
 <link rel="stylesheet" href="{% static 'css/posts/user_feed.css' %}" />
-{% endblock %} {% block content %}
+{% endblock %}
+{% block content %}
 <section class="page-header">
-  <h1>Post List</h1>
+  <h1>My Feed (All Posts)</h1>
 </section>
+<section class="filter-search">
+<form method="get" class="feed-filters">
+  <fieldset>
+    <legend>Continents</legend>
+    {% for cont in continents %}
+      <label>
+        <input type="checkbox" name="continents" value="{{ cont }}"
+    {% if cont in selected_continents %}checked{% endif %}>
+    {{ cont }}
+</label><br>
+    {% endfor %}
+  </fieldset>
 
+  <label for="countries">Countries</label><br>
+  <select name="countries" id="countries" multiple>
+    {% for country in countries %}
+      <option value="{{ country }}"
+        {% if country in selected_countries %}selected{% endif %}>
+        {{ country }}
+      </option>
+    {% endfor %}
+  </select><br><br>
+
+  <button type="submit">Apply Filters</button>
+</form>
+</section>
 <section class="post-list">
   {% for post in posts %}
   <article class="post-item">
@@ -15,5 +43,6 @@
   </article>
   {% empty %}
   <p>No posts available.</p>
-  {% endfor %} {% endblock %}
+  {% endfor %}
 </section>
+{% endblock %}
