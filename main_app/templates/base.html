@@ -11,31 +11,31 @@
     {% block head %} {% endblock %}
   </head>
   <body>
-    <header>
-      <div class="header-logo-container">
-        <a href="{% url 'home'%}"> </a>
-      </div>
-      <nav>
-        <ul>
-          {% if user.is_authenticated %}
-          <li>
-            <form id="logout-form" method="post" action="{% url 'logout' %}">
-              {% csrf_token %}
-              <button type="submit">Log out</button>
-            </form>
-          </li>
-          <li><a href="{% url 'user_feed' %}">My feed</a></li>
-          <li><a href="{% url 'user_posts' %}">My Posts</a></li>
-          <li><a href="{% url 'post-create' %}">Create Post</a></li>
-          {% else %}
+    <header class="site-header">
+  <div class="header-logo-container">
+    <a href="{% url 'user_feed'%}">Mosaic</a>
+  </div>
+  <nav>
+    <ul class="nav-list">
+      {% if user.is_authenticated %}
+      <li>
+        <form id="logout-form" method="post" action="{% url 'logout' %}">
+          {% csrf_token %}
+          <button type="submit" class="nav-button">Log out</button>
+        </form>
+      </li>
+      <li><a href="{% url 'user_feed' %}" class="nav-link">Feeds</a></li>
+      <li><a href="{% url 'user_posts' %}" class="nav-link">My Page</a></li>
+      <li><a href="{% url 'post-create' %}" class="nav-link">Post</a></li>
+      {% else %}
+      <li><a href="{% url 'home' %}" class="nav-link">Login</a></li>
+      <li><a href="{% url 'signup' %}" class="nav-link">Signup</a></li>
+      {% endif %}
+    </ul>
+  </nav>
+</header>
 
-          <li><a href="{% url 'home' %}">Login</a></li>
-          <li><a href="{% url 'signup' %}">Signup</a></li>
 
-          {% endif %}
-        </ul>
-      </nav>
-    </header>
     <main>{% block content %} {% endblock %}</main>
   </body>
 </html>
