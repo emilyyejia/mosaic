@@ -5,7 +5,8 @@
   <div class="post-details">
     <h1>{{ post.title }}</h1>
     <p>{{ post.body}}</p>
-    <p>{{ post.tags}}</p>
+    <p>Tags: {{ post.tags}}</p>
+    <p>Country: {{ post.country.name }}</p>
     {% if post.image %}
     <img src="{{ post.image.url }}" alt="{{ post.title }}" class="post-img" />
     {% endif %}
