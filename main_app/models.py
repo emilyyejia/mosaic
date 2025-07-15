@@ -1,16 +1,30 @@
 from django.db import models
 from django.urls import reverse
 from datetime import date
+from storages.backends.s3 import S3File
+from storages.backends.s3boto3 import S3Boto3Storage
 # Import the User
 from django.contrib.auth.models import User
+
+
+class PhotoImageStorage(S3Boto3Storage):  
+    location = 'postsphotos'  # This is the name of the bucket in S3
+
 
 class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     body = models.TextField(max_length=500)
     tags = models.CharField(max_length=100)
-    image = models.ImageField( null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    
+    image = models.ImageField(
+    upload_to='postsphotos/',
+    storage=PhotoImageStorage(),
+    null=True,
+    blank=True,
+    )
+
 
     def __str__(self):
         return f'{self.title}'
@@ -25,3 +39,4 @@ class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     def __str__(self):
         return f'{self.text} by {self.user} on {self.date}'
+    
