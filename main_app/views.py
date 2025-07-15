@@ -59,7 +59,8 @@ def signup(request):
 
 @login_required
 def user_posts(request):
-    return render(request, 'posts/user_posts.html') 
+    posts = Post.objects.filter(user=request.user)
+    return render(request, 'posts/user_posts.html', {'posts': posts})
 
 @login_required
 def user_feed(request):
