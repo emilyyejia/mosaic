@@ -55,17 +55,15 @@
 </section>
 <section class="post-list">
   {% for post in posts %}
-  <a href="{% url 'post_detail' post.id %}" class="post-card-link">
-    <article class="post-item">
-      <h2>{{ post.title }}</h2>
-      {% if post.image %}
-      <img src="{{ post.image.url }}" alt="{{ post.title }}" class="post-img" />
-      {% endif %}
-      <p>{{ post.body|truncatewords:30 }}</p>
-      <p>Tags: {{ post.tags }}</p>
-      <p>Posted by: {{ post.user.username }}</p>
-    </article>
-  </a>
+    <a href="{% url 'post_detail' post.id %}" class="post-card-link">
+      <article class="post-item">
+        <h2>{{ post.title }}</h2>
+        <p>{{ post.body|truncatewords:30 }}</p>
+        <p>Tags: {{ post.tags }}</p>
+        <p>Country: {{ post.country.name }}</p>
+        <p>Posted by: {{ post.user.username }}</p>
+      </article>
+    </a>
   {% empty %}
   <p>No posts available.</p>
   {% endfor %}
