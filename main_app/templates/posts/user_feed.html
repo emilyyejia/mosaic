@@ -1,54 +1,88 @@
-{% extends 'base.html' %}
-{% load static %}
-{% block head %}
+{% extends 'base.html' %} {% load static %} {% block head %}
 <link rel="stylesheet" href="{% static 'css/posts/user_feed.css' %}" />
-{% endblock %}
-{% block content %}
+{% endblock %} {% block content %}
 <section class="page-header">
   <h1>My Feed (All Posts)</h1>
 </section>
 <section class="filter-search">
-<form method="get" class="feed-filters">
-  <label for="search">Search posts:</label><br>
-  <label>
-  <input type="checkbox" name="tags_only" {% if request.GET.tags_only %}checked{% endif %}>
-  Tags:
-</label>
-<input type="text" name="q" id="search" value="{{ request.GET.q }}"><br><br>
-  <fieldset>
-    <legend>Continents</legend>
-    {% for cont in continents %}
+  <form method="get" class="feed-filters">
+    <label for="search">Search posts:</label><br />
+    <label>
+      <input
+        type="checkbox"
+        name="tags_only"
+        {%
+        if
+        request.GET.tags_only
+        %}checked{%
+        endif
+        %}
+      />
+      Tags:
+    </label>
+    <input
+      type="text"
+      name="q"
+      id="search"
+      value="{{ request.GET.q }}"
+    /><br /><br />
+    <fieldset>
+      <legend>Continents</legend>
+      {% for cont in continents %}
       <label>
-        <input type="checkbox" name="continents" value="{{ cont }}"
-    {% if cont in selected_continents %}checked{% endif %}>
-    {{ cont }}
-</label><br>
-    {% endfor %}
-  </fieldset>
+        <input
+          type="checkbox"
+          name="continents"
+          value="{{ cont }}"
+          {%
+          if
+          cont
+          in
+          selected_continents
+          %}checked{%
+          endif
+          %}
+        />
+        {{ cont }} </label
+      ><br />
+      {% endfor %}
+    </fieldset>
 
-  <label for="countries">Countries</label><br>
-  <select name="countries" id="countries" multiple>
-    {% for country in countries %}
-      <option value="{{ country }}"
-        {% if country in selected_countries %}selected{% endif %}>
+    <label for="countries">Countries</label><br />
+    <select name="countries" id="countries" multiple>
+      {% for country in countries %}
+      <option
+        value="{{ country }}"
+        {%
+        if
+        country
+        in
+        selected_countries
+        %}selected{%
+        endif
+        %}
+      >
         {{ country }}
       </option>
-    {% endfor %}
-  </select><br><br>
+      {% endfor %}</select
+    ><br /><br />
 
-  <button type="submit">Apply Filters</button>
-</form>
+    <button type="submit">Apply Filters</button>
+  </form>
 </section>
 <section class="post-list">
   {% for post in posts %}
-<a href="{% url 'post_detail' post.id %}" class="post-card-link">
-  <article class="post-item">
-    <h2>{{ post.title }}</h2>
-    <p>{{ post.body|truncatewords:30 }}</p>
-    <p>Tags: {{ post.tags }}</p>
-    <p>Posted by: {{ post.user.username }}</p>
-  </article>
-</a>
+  <a href="{% url 'post_detail' post.id %}" class="post-card-link">
+    <article class="post-item">
+      <h2>{{ post.title }}</h2>
+      {% if post.image %}
+      <img src="{{ post.image.url }}" alt="{{ post.title }}" class="post-img" />
+      {% endif %}
+      <p>{{ post.body|truncatewords:30 }}</p>
+      <p>Tags: {{ post.tags }}</p>
+      <p>Posted by: {{ post.user.username }}</p>
+    </article>
+  </a>
   {% empty %}
   <p>No posts available.</p>
   {% endfor %}

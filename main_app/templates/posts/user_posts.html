@@ -5,7 +5,7 @@
 {% endblock %}
 {% block content %}
 <h1>Welcome, {{ user.username }}!</h1>
-<p>My posts</p>
+
 </section>
 
 <section class="post-list">
@@ -14,6 +14,9 @@
     <h2><a href="{% url 'post_detail' post.id %}">{{ post.title }}</a></h2>
     <p>{{ post.body|truncatewords:30 }}</p>
     <p>Tags: {{ post.tags }}</p>
+     {% if post.image %}
+      <img src="{{ post.image.url }}" alt="{{ post.title }}" class="post-img" />
+      {% endif %}
     <p>Posted by: {{ post.user.username }}</p>
   </article>
   {% empty %}
