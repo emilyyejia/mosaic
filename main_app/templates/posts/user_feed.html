@@ -9,6 +9,12 @@
 </section>
 <section class="filter-search">
 <form method="get" class="feed-filters">
+  <label for="search">Search posts:</label><br>
+  <label>
+  <input type="checkbox" name="tags_only" {% if request.GET.tags_only %}checked{% endif %}>
+  Tags:
+</label>
+<input type="text" name="q" id="search" value="{{ request.GET.q }}"><br><br>
   <fieldset>
     <legend>Continents</legend>
     {% for cont in continents %}
@@ -35,12 +41,14 @@
 </section>
 <section class="post-list">
   {% for post in posts %}
+<a href="{% url 'post_detail' post.id %}" class="post-card-link">
   <article class="post-item">
-    <h2><a href="{% url 'post_detail' post.id %}">{{ post.title }}</a></h2>
+    <h2>{{ post.title }}</h2>
     <p>{{ post.body|truncatewords:30 }}</p>
     <p>Tags: {{ post.tags }}</p>
     <p>Posted by: {{ post.user.username }}</p>
   </article>
+</a>
   {% empty %}
   <p>No posts available.</p>
   {% endfor %}
