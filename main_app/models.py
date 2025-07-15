@@ -16,3 +16,10 @@ class Post(models.Model):
     def get_absolute_url(self):
         # Use the 'reverse' function to dynamically find the URL for viewing this cat's details
         return reverse('post_detail', kwargs={'post_id': self.id})
+
+class Comment(models.Model):
+    date = models.DateField('Commented on')
+    text = models.CharField(max_length=500)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, null=True)
+    def __str__(self):
+        return f'{self.text} on {self.date}'
