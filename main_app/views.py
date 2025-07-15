@@ -55,4 +55,11 @@ def signup(request):
     context = {'form': form, 'error_message': error_message}
     return render(request, 'signup.html', context)
 
-# @login_required 
+@login_required
+def user_posts(request):
+    return render(request, 'posts/user_posts.html') 
+
+@login_required
+def all_posts_feed(request):
+    posts = Post.objects.all()
+    return render(request, 'posts/user_feed.html', {'posts': posts})
