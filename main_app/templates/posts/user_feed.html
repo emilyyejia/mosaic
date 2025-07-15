@@ -1,73 +1,56 @@
-{% extends 'base.html' %} {% load static %} {% block head %}
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
 <link rel="stylesheet" href="{% static 'css/posts/user_feed.css' %}" />
-{% endblock %} {% block content %}
+{% endblock %}
+
+{% block content %}
 <section class="page-header">
   <h1>My Feed (All Posts)</h1>
 </section>
 <section class="filter-search">
   <form method="get" class="feed-filters">
-    <label for="search">Search posts:</label><br />
-    <label>
-      <input
-        type="checkbox"
-        name="tags_only"
-        {%
-        if
-        request.GET.tags_only
-        %}checked{%
-        endif
-        %}
-      />
-      Tags:
-    </label>
-    <input
-      type="text"
-      name="q"
-      id="search"
-      value="{{ request.GET.q }}"
-    /><br /><br />
     <fieldset>
-      <legend>Continents</legend>
-      {% for cont in continents %}
+      <legend>Search</legend>
+      <input type="text" name="q" placeholder="Search posts..." value="{{ query }}">
       <label>
-        <input
-          type="checkbox"
-          name="continents"
-          value="{{ cont }}"
-          {%
-          if
-          cont
-          in
-          selected_continents
-          %}checked{%
-          endif
-          %}
-        />
-        {{ cont }} </label
-      ><br />
-      {% endfor %}
+        <input type="checkbox" name="tags_only" {% if tags_only %}checked{% endif %}>
+        Tags only
+      </label>
     </fieldset>
 
-    <label for="countries">Countries</label><br />
-    <select name="countries" id="countries" multiple>
-      {% for country in countries %}
-      <option
-        value="{{ country }}"
-        {%
-        if
-        country
-        in
-        selected_countries
-        %}selected{%
-        endif
-        %}
-      >
-        {{ country }}
-      </option>
-      {% endfor %}</select
-    ><br /><br />
+    <div class="filter-row">
+      <fieldset>
+        <legend>Continent</legend>
+        <select id="continent-select" name="continent">
+          <option value="">All Continents</option>
+          {% for cont in continents %}
+            <option value="{{ cont }}" {% if cont == selected_continent %}selected{% endif %}>{{ cont }}</option>
+          {% endfor %}
+        </select>
+      </fieldset>
 
-    <button type="submit">Apply Filters</button>
+      <fieldset>
+        <legend>Country</legend>
+        <select id="country-select" name="country">
+          <option value="">All Countries</option>
+          {% for code, name in countries %}
+            <option value="{{ code }}" {% if code == selected_country %}selected{% endif %}>{{ name }}</option>
+          {% endfor %}
+        </select>
+      </fieldset>
+    </div>
+
+    <fieldset>
+      <legend>Sort</legend>
+      <select name="sort">
+        <option value="recent" {% if sort == "recent" %}selected{% endif %}>Most Recent</option>
+        <option value="oldest" {% if sort == "oldest" %}selected{% endif %}>Oldest First</option>
+      </select>
+    </fieldset>
+
+    <button type="submit">Apply</button>
   </form>
 </section>
 <section class="post-list">
