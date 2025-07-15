@@ -1,3 +1,6 @@
 from django.contrib import admin
+from .models import Post, Comment
 
-# Register your models here.
+admin.site.register(Post)
+# Register the new Feeding model
+admin.site.register(Comment)
