@@ -18,8 +18,9 @@ class Post(models.Model):
         return reverse('post_detail', kwargs={'post_id': self.id})
 
 class Comment(models.Model):
-    date = models.DateField('Commented on')
+    date = models.DateField('Commented on', auto_now_add=True)
     text = models.CharField(max_length=500)
     post = models.ForeignKey(Post, on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     def __str__(self):
-        return f'{self.text} on {self.date}'
+        return f'{self.text} by {self.user} on {self.date}'
