@@ -113,6 +113,10 @@ def user_feed(request):
         filtered_countries = all_countries
     if selected_country:
         posts = posts.filter(country=selected_country)
+    elif selected_continent:
+        country_codes = CONTINENT_COUNTRIES.get(selected_continent, [])
+    if country_codes:
+        posts = posts.filter(country__in=country_codes)
     if query:
         if tags_only:
             posts = posts.filter(tags__icontains=query)
