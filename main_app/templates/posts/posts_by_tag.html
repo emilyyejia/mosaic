@@ -1,0 +1,17 @@
+{% extends 'base.html' %} {% block content %}
+<section class="page-header">
+  <h1>Posts tagged with "{{ tag.name }}"</h1>
+</section>
+
+<section class="post-list">
+  {% for post in posts %}
+  <article class="post-item">
+    <h2><a href="{% url 'post_detail' post.id %}">{{ post.title }}</a></h2>
+    <p>{{ post.body|truncatewords:30 }}</p>
+    <p>Posted by: {{ post.user.username }}</p>
+  </article>
+  {% empty %}
+  <p>No posts found with this tag.</p>
+  {% endfor %}
+</section>
+{% endblock %}
