@@ -6,45 +6,22 @@
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <style>
   #map {
-  height: 350px;
-  width: 100%;
-  max-width: 600px;
-  margin: 0 auto 2em auto;
-  border-radius: 12px;
-  border: 1px solid #ccc;
-}
+    height: 350px;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto 2em auto;
+    border-radius: 12px;
+    border: 1px solid #ccc;
+  }
 </style>
 {% endblock %}
+
 {% block content %}
 <h1>Welcome, {{ user.username }}!</h1>
 
-</section>
 <div id="map"></div>
 <pre>{{ user_countries }}</pre>
 {{ user_countries|json_script:"userCountryData" }}
-
-<script>
-const map = L.map('map').setView([20, 0], 2);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  attribution: '© OpenStreetMap contributors'
-}).addTo(map);
-const userCountries = JSON.parse(document.getElementById("userCountryData").textContent);
-
-fetch("https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson")
-  .then(res => res.json())
-  .then(data => {    
-    L.geoJSON(data, {
-      style: function (feature) {
-      const isoCode = (feature.properties.ISO_A2 || "").toUpperCase();
-        return {
-          color: userCountries.includes(isoCode) ? "#2a9d8f" : "#ccc",
-          fillOpacity: userCountries.includes(isoCode) ? 0.6 : 0.1,
-          weight: 1
-        };
-      }
-    }).addTo(map);
-  });
-</script>
 
 <section class="post-list">
   {% for post in posts %}
@@ -76,8 +53,9 @@ document.addEventListener("DOMContentLoaded", function () {
     .then(data => {
       L.geoJSON(data, {
         style: function (feature) {
-          const isoCode = (feature.properties.ISO_A2 || "").toUpperCase();
-          return {
+        const isoCode = (feature.properties["ISO3166-1-Alpha-2"] || "").toUpperCase();
+        console.log("Highlighting country code:", isoCode);  
+        return {
             color: userCountries.includes(isoCode) ? "#2a9d8f" : "#ccc",
             fillOpacity: userCountries.includes(isoCode) ? 0.6 : 0.1,
             weight: 1
@@ -88,4 +66,3 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 {% endblock %}
-
