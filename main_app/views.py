@@ -13,6 +13,7 @@ from django_countries import countries
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import ollama
+from taggit.models import Tag
 
 # Initialize the Ollama client
 ollama_client = ollama.Client()
