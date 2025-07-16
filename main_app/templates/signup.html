@@ -12,10 +12,32 @@
 {% endif %}
 <form action="" method="post" class="form-container" autocomplete="off">
   {% csrf_token %}
-  <table>
-    {{ form.as_table }}
-  </table>
-  <button type="submit" class="btn submit">Submit!</button>
+  
+  <div>
+    {{ form.username.label_tag }}
+    {{ form.username }}
+    {% for error in form.username.errors %}
+      <p class="red-text">{{ error }}</p>
+    {% endfor %}
+  </div>
+
+  <div>
+    {{ form.password1.label_tag }}
+    {{ form.password1 }}
+    {% for error in form.password1.errors %}
+      <p class="red-text">{{ error }}</p>
+    {% endfor %}
+  </div>
+
+  <div>
+    {{ form.password2.label_tag }}
+    {{ form.password2 }}
+    {% for error in form.password2.errors %}
+      <p class="red-text">{{ error }}</p>
+    {% endfor %}
+  </div>
+
+  <button type="submit" class="btn submit">Submit</button>
 </form>
 
 {% endblock %}
