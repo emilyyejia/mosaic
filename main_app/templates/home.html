@@ -3,19 +3,6 @@
 
 {% block head %}
 <link rel="stylesheet" href="{% static 'css/home.css' %}" />
-<style>
-  /* Simple styles for translation popup */
-  #translation-popup {
-    margin-top: 1rem;
-    padding: 1rem;
-    border: 1px solid #007bff;
-    background-color: #e9f5ff;
-    display: none;
-  }
-  #translate-btn {
-    margin-top: 1rem;
-  }
-</style>
 {% endblock %}
 
 {% block content %}
@@ -30,9 +17,6 @@
       happen. Join us and start your global journey today!
     </p>
     
-    <button id="translate-btn">Translate to Chinese</button>
-
-    <div id="translation-popup"></div>
 
   {% else %}
     <section>
@@ -47,39 +31,5 @@
   {% endif %}
 </section>
 
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const translateBtn = document.getElementById('translate-btn');
-    const introText = document.getElementById('intro-text').textContent.trim();
-    const translationPopup = document.getElementById('translation-popup');
-
-    translateBtn.addEventListener('click', () => {
-      fetch("{% url 'translate' %}", {
-        method: "POST",
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'X-CSRFToken': '{{ csrf_token }}'
-        },
-        body: new URLSearchParams({
-          input: introText
-        })
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.translation) {
-          translationPopup.style.display = 'block';
-          translationPopup.textContent = data.translation;
-        } else if (data.error) {
-          translationPopup.style.display = 'block';
-          translationPopup.textContent = 'Error: ' + data.error;
-        }
-      })
-      .catch(err => {
-        translationPopup.style.display = 'block';
-        translationPopup.textContent = 'An error occurred while translating.';
-      });
-    });
-  });
-</script>
 
 {% endblock %}
