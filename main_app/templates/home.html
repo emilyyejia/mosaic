@@ -1,30 +1,35 @@
 {% extends 'base.html' %}
 {% load static %}
+
 {% block head %}
 <link rel="stylesheet" href="{% static 'css/home.css' %}" />
 {% endblock %}
+
 {% block content %}
 <section class="home-section">
   {% if user.is_authenticated %}
-    <h1>Welcome to Connectly!</h1>
-    <p>
+    <h1>Connectly: Your Global Community Awaits</h1>
+    <p id="intro-text">
       Discover a world without borders — Connectly brings people from every corner
       of the globe together to share, learn, and build meaningful friendships.
       Whether you want to explore new cultures, find language partners, or simply
       connect with amazing people worldwide, Connectly is your space to make it
       happen. Join us and start your global journey today!
     </p>
-  {% endif %}
+    
 
-  {% if not user.is_authenticated %}
-  <section>
-    <form action="{% url 'home' %}" method="post" class="login">
-      <h1>Login</h1>
-      {% csrf_token %} {{ form.as_p }}
-      <input type="hidden" name="next" value="{{ next }}" />
-      <button type="submit" class="btn submit">Login</button>
-    </form>
-  </section>
+  {% else %}
+    <section>
+      <form action="{% url 'home' %}" method="post" class="login">
+        <h1>Login</h1>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="hidden" name="next" value="{{ next }}" />
+        <button type="submit" class="btn submit">Login</button>
+      </form>
+    </section>
   {% endif %}
 </section>
+
+
 {% endblock %}

@@ -10,13 +10,14 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django_countries import countries
-from taggit.models import Tag
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import ollama
 
+# Initialize the Ollama client
 ollama_client = ollama.Client()
 
+# Load your Ollama model
 
 @csrf_exempt
 def translate(request):
@@ -33,6 +34,7 @@ def translate(request):
         return JsonResponse({'translation': translation})
     else:
         return JsonResponse({'error': 'POST request required'})
+    
 #country dictionary
 CONTINENT_COUNTRIES = {
   'Africa': [
@@ -111,30 +113,44 @@ def signup(request):
     context = {'form': form, 'error_message': error_message}
     return render(request, 'signup.html', context)
 
+from django_countries import countries
+
 @login_required
 def user_posts(request):
     posts = Post.objects.filter(user=request.user)
-    return render(request, 'posts/user_posts.html', {'posts': posts})
+    user_country_codes = list(
+        posts.exclude(country="").values_list("country", flat=True).distinct())
+    user_country_codes = [str(code).upper() for code in user_country_codes] 
+    return render(request, 'posts/user_posts.html', {
+        'posts': posts,
+        'user_countries': user_country_codes,
+    })
+
 
 
 @login_required
 def user_feed(request):
     posts = Post.objects.all()
+
     selected_continent = request.GET.get("continent")
     selected_country = request.GET.get("country")
     query = request.GET.get("q", "").strip()
     tags_only = request.GET.get("tags_only")
     sort = request.GET.get("sort", "recent")
     continents = list(CONTINENT_COUNTRIES.keys())
-    all_countries = list(countries)
+    all_countries = list(countries)  # list of (code, name)
     country_name_map = {code: name for code, name in all_countries}
+    if selected_country:
+        country_codes = [selected_country]
+    elif selected_continent:
+        country_codes = CONTINENT_COUNTRIES.get(selected_continent, [])
+    else:
+        country_codes = [code for code, _ in all_countries]
     if selected_continent:
-        codes_in_continent = CONTINENT_COUNTRIES.get(selected_continent, [])
-        filtered_countries = [(code, name) for code, name in all_countries if code in codes_in_continent]
+        filtered_countries = [(code, name) for code, name in all_countries if code in CONTINENT_COUNTRIES.get(selected_continent, [])]
     else:
         filtered_countries = all_countries
-    if selected_country:
-        posts = posts.filter(country=selected_country)
+    posts = posts.filter(country__in=country_codes)
     if query:
         if tags_only:
             posts = posts.filter(tags__name__icontains=query)
@@ -148,6 +164,7 @@ def user_feed(request):
         posts = posts.order_by("-created_at")
     elif sort == "oldest":
         posts = posts.order_by("created_at")
+
     context = {
         "posts": posts,
         "continents": continents,
@@ -157,7 +174,7 @@ def user_feed(request):
         "query": query,
         "tags_only": tags_only,
         "sort": sort,
-        "country_name_map":country_name_map,
+        "country_name_map": country_name_map,
     }
     return render(request, "posts/user_feed.html", context)
 

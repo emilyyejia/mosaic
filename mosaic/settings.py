@@ -95,6 +95,8 @@ DATABASES = {
       'PASSWORD': env('DB_PW'),
       'HOST': env('DB_HOST'),
       'PORT': '5432',
+      'OPTIONS': {
+            'sslmode': 'require',}
     }
 }
 
@@ -152,8 +154,6 @@ AWS_QUERYSTRING_AUTH = False  # makes uploaded files publicly accessible
 
 MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com/"
 
-
-TAGGIT_CASE_INSENSITIVE = True
 
 import django_on_heroku
 django_on_heroku.settings(locals(), databases=False)
