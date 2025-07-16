@@ -11,9 +11,28 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django_countries import countries
 from taggit.models import Tag
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import ollama
+
+ollama_client = ollama.Client()
 
 
+@csrf_exempt
+def translate(request):
+    if request.method == 'POST':
+        data = request.POST.get('input')
+        response = ollama_client.generate(
+            model="llama3",
+            prompt=f"Translate this to Chinese: {data}",
+            stream=False
+        )
 
+        translation = response['response']        
+
+        return JsonResponse({'translation': translation})
+    else:
+        return JsonResponse({'error': 'POST request required'})
 #country dictionary
 CONTINENT_COUNTRIES = {
   'Africa': [

@@ -154,3 +154,6 @@ MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaw
 
 
 TAGGIT_CASE_INSENSITIVE = True
+
+import django_on_heroku
+django_on_heroku.settings(locals(), databases=False)
