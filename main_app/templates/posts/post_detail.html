@@ -1,28 +1,10 @@
-{% extends 'base.html' %}
-{% load static %}
-
-{% block head %}
+{% extends 'base.html' %} {% load static %} {% block head %}
 <link rel="stylesheet" href="{% static 'css/posts/post-detail.css' %}" />
-<style>
-  #comments-section {
-    display: none;
-    margin-top: 1rem;
-  }
-  .btn {
-    padding: 0.5rem 1rem;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    cursor: pointer;
-  }
-</style>
-{% endblock %}
-
-{% block content %}
+{% endblock %} {% block content %}
 <section class="post-container">
   <div class="post-details">
     <h1>{{ post.title }}</h1>
-    <p>{{ post.body }}</p>
+    <p>{{ post.body}}</p>
     <p>Country: {{ post.country.name }}</p>
     {% if post.image %}
       <img src="{{ post.image.url }}" alt="{{ post.title }}" class="post-img" />
