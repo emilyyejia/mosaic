@@ -4,7 +4,7 @@ from django.views.generic import ListView, DetailView, CreateView
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
 from .models import Post, Comment
-from .forms import CommentForm
+from .forms import PostForm, CommentForm
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -84,7 +84,8 @@ def post_detail(request, post_id):
 
 class PostCreate(LoginRequiredMixin, CreateView):
     model = Post
-    fields = ['title', 'body', 'tags', 'country', 'image']
+    form_class = PostForm 
+    # fields = ['title', 'body', 'tags', 'country', 'image']
     # success_url = '/user_feed/'
     def form_valid(self, form):
         form.instance.user = self.request.user  
@@ -152,12 +153,12 @@ def user_feed(request):
     posts = posts.filter(country__in=country_codes)
     if query:
         if tags_only:
-            posts = posts.filter(tags__icontains=query)
+            posts = posts.filter(tags__name__icontains=query)
         else:
             posts = posts.filter(
                 Q(title__icontains=query) |
                 Q(body__icontains=query) |
-                Q(tags__icontains=query)
+                Q(tags__name__icontains=query)
             )
     if sort == "recent":
         posts = posts.order_by("-created_at")
@@ -216,4 +217,9 @@ class CommentDelete(LoginRequiredMixin, DeleteView):
     def test_func(self):
         comment = self.get_object()
         return self.request.user == comment.user
+    
+def posts_by_tag(request, tag_slug):
+    tag = Tag.objects.get(slug=tag_slug)
+    posts = Post.objects.filter(tags__in=[tag])
+    return render(request, 'posts/posts_by_tag.html', {'tag': tag, 'posts': posts})   
     

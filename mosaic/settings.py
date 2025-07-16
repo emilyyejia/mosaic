@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'storages',
     'django_countries',
+    'taggit',
 ]
 
 MIDDLEWARE = [
@@ -152,6 +153,7 @@ AWS_S3_REGION_NAME = os.environ.get('AWS_S3_REGION_NAME')  # e.g. 'us-west-1'
 AWS_QUERYSTRING_AUTH = False  # makes uploaded files publicly accessible
 
 MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com/"
+
 
 import django_on_heroku
 django_on_heroku.settings(locals(), databases=False)
