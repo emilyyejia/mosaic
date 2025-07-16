@@ -94,6 +94,8 @@ DATABASES = {
       'PASSWORD': env('DB_PW'),
       'HOST': env('DB_HOST'),
       'PORT': '5432',
+      'OPTIONS': {
+            'sslmode': 'require',}
     }
 }
 
