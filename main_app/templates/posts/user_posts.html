@@ -13,6 +13,9 @@
   <article class="post-item">
     <h2><a href="{% url 'post_detail' post.id %}">{{ post.title }}</a></h2>
     <p>{{ post.body|truncatewords:30 }}</p>
+    {% if post.image %}
+    <img src="{{ post.image.url }}" alt="{{ post.title }}" class="post-img" />
+    {% endif %}
     <p>Tags: {{ post.tags }}</p>
     <p>Country: {{ post.country.name }}</p>
     <p>Posted by: {{ post.user.username }}</p>
