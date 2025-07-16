@@ -7,7 +7,7 @@
     <p>{{ post.body}}</p>
     <p>Country: {{ post.country.name }}</p>
     {% if post.image %}
-    <img src="{{ post.image.url }}" alt="{{ post.title }}" class="post-img" />
+      <img src="{{ post.image.url }}" alt="{{ post.title }}" class="post-img" />
     {% endif %}
   </div>
   <p>
@@ -17,11 +17,11 @@
   </p>
   <div class="post-actions">
     {% if post.user == request.user %}
-    <a href="{% url 'post-update' post.id %}">Edit</a> |
-    <a href="{% url 'post-delete' post.id %}">Delete</a>
+      <a href="{% url 'post-update' post.id %}">Edit</a> |
+      <a href="{% url 'post-delete' post.id %}">Delete</a>
     {% endif %}
   </div>
-  <form
+ <form
     action="{% url 'add-comment' post.id %}"
     method="post"
     class="comment-form"
@@ -67,4 +67,20 @@
   </div>
 </section>
 
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const toggleBtn = document.getElementById("toggle-comments-btn");
+    const commentsSection = document.getElementById("comments-section");
+
+    toggleBtn.addEventListener("click", function () {
+      if (commentsSection.style.display === "none" || commentsSection.style.display === "") {
+        commentsSection.style.display = "block";
+        toggleBtn.textContent = "Hide Comments";
+      } else {
+        commentsSection.style.display = "none";
+        toggleBtn.textContent = "Show Comments";
+      }
+    });
+  });
+</script>
 {% endblock %}

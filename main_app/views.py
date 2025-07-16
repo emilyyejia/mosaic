@@ -181,20 +181,24 @@ def user_feed(request):
 
 @login_required
 def add_comment(request, post_id):
-    form = CommentForm(request.POST)
-    parent_id = request.POST.get("parent_id")
-    
-    if form.is_valid():
-        new_comment = form.save(commit=False)
-        new_comment.post_id = post_id
-        new_comment.user = request.user
+    if request.method == 'POST':
+        post = Post.objects.get(id=post_id)
+        form = CommentForm(request.POST)
 
-        if parent_id:
-            parent_comment = Comment.objects.get(id=parent_id)
-            new_comment.parent = parent_comment
-        new_comment.save()
-    
-    return redirect('post_detail', post_id=post_id)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.user = request.user
+            comment.post = post
+
+            parent_id = request.POST.get('parent_id')
+            if parent_id:
+                parent_comment = Comment.objects.get(id=parent_id, post=post)
+                comment.parent = parent_comment
+
+            comment.save()
+
+        return redirect('post_detail', post_id=post.id)
+
 
 
 class CommentUpdate(LoginRequiredMixin, UpdateView):
