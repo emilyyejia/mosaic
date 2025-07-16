@@ -50,12 +50,8 @@ CONTINENT_COUNTRIES = {
     'AQ'
   ]}
 
-# Define the home view function
 class Home(LoginView):
-    # Send a simple HTML response
     template_name = 'home.html'
-
-# Create your views here.
 
 def post_detail(request, post_id):  
     post = Post.objects.get(id=post_id)
@@ -146,12 +142,20 @@ def user_feed(request):
 @login_required
 def add_comment(request, post_id):
     form = CommentForm(request.POST)
+    parent_id = request.POST.get("parent_id")
+    
     if form.is_valid():
         new_comment = form.save(commit=False)
         new_comment.post_id = post_id
         new_comment.user = request.user
+
+        if parent_id:
+            parent_comment = Comment.objects.get(id=parent_id)
+            new_comment.parent = parent_comment
         new_comment.save()
-    return redirect('post_detail', post_id = post_id)
+    
+    return redirect('post_detail', post_id=post_id)
+
 
 class CommentUpdate(LoginRequiredMixin, UpdateView):
     model = Comment

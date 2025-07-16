@@ -15,55 +15,86 @@
 
 .feed-filters {
   display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto;
+  flex-direction: column;
+  gap: 1.5rem; /* space between rows */
   max-width: 900px;
+  margin: 0 auto;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.feed-filters label {
-  margin-right: 0.5rem;
-  white-space: nowrap;
+/* Each filter row stacked vertically */
+.filter-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem; /* space between label and input */
 }
 
+/* Styling for fieldset and legend */
+.feed-filters fieldset {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  background-color: #f9f9f9;
+}
+
+.feed-filters legend {
+  font-weight: 600;
+  padding: 0 0.5rem;
+  font-size: 1rem;
+}
+
+/* Inputs, selects and checkbox aligned nicely */
 .feed-filters input[type="text"],
-.feed-filters select,
-.feed-filters button,
-.feed-filters input[type="checkbox"] {
-  margin: 0;
-  vertical-align: middle;
-  height: 2rem;
+.feed-filters select {
+  max-width: 320px;
+  height: 2.2rem;
   padding: 0.25rem 0.5rem;
   font-size: 1rem;
   border-radius: 4px;
   border: 1px solid #ccc;
+  outline-offset: 2px;
+  outline-color: transparent;
+  transition: outline-color 0.3s ease;
 }
 
-.feed-filters select[multiple] {
-  max-width: 200px;
-  min-width: 150px;
-  height: 5rem;
-  vertical-align: middle;
+.feed-filters input[type="text"]:focus,
+.feed-filters select:focus {
+  outline-color: #0d6efd;
+  border-color: #0d6efd;
 }
 
+/* Checkbox label inline with checkbox */
+.feed-filters label {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.95rem;
+  user-select: none;
+  max-width: 320px;
+}
+
+/* Style for the submit button */
 .feed-filters button {
+  max-width: 150px;
   cursor: pointer;
   background-color: #0d6efd;
   border: none;
   color: white;
-  padding: 0.4rem 1rem;
-  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
   font-weight: 600;
+  font-size: 1rem;
+  align-self: flex-start;
   transition: background-color 0.3s ease;
-  height: 2.5rem;
+  box-shadow: 0 2px 6px rgba(13, 110, 253, 0.4);
 }
 
 .feed-filters button:hover {
   background-color: #084298;
+  box-shadow: 0 3px 8px rgba(8, 66, 152, 0.6);
 }
 
+/* Post list styles remain the same */
 .post-list {
   max-width: 900px;
   margin: 0 auto 2rem auto;

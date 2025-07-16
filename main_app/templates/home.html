@@ -1,8 +1,21 @@
-{% extends 'base.html' %} {% load static %} {% block head %}
+{% extends 'base.html' %}
+{% load static %}
+{% block head %}
 <link rel="stylesheet" href="{% static 'css/home.css' %}" />
-{% endblock %} {%block content %}
+{% endblock %}
+{% block content %}
 <section class="home-section">
-  <h1>Welcome to Mosaic!</h1>
+  {% if user.is_authenticated %}
+    <h1>Welcome to Connectly!</h1>
+    <p>
+      Discover a world without borders — Connectly brings people from every corner
+      of the globe together to share, learn, and build meaningful friendships.
+      Whether you want to explore new cultures, find language partners, or simply
+      connect with amazing people worldwide, Connectly is your space to make it
+      happen. Join us and start your global journey today!
+    </p>
+  {% endif %}
+
   {% if not user.is_authenticated %}
   <section>
     <form action="{% url 'home' %}" method="post" class="login">
@@ -14,5 +27,4 @@
   </section>
   {% endif %}
 </section>
-
 {% endblock %}

@@ -5,6 +5,7 @@
   <form method="post" autocomplete="off">
     {% csrf_token %}
     {{ form.as_p }}
+    <input type="hidden" name="parent_id" value="{{ parent_comment_id }}">
     <button type="submit" class="btn submit">Save</button>
   </form>
 {% endblock %}
