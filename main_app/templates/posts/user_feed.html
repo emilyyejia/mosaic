@@ -12,6 +12,7 @@
 
 <section class="filter-search">
   <form method="get" class="feed-filters">
+  <div class="filter-row">
     <fieldset>
       <legend>Search</legend>
       <input type="text" name="q" placeholder="Search posts..." value="{{ query }}">
@@ -20,29 +21,31 @@
         Tags only
       </label>
     </fieldset>
+  </div>
 
-    <div class="filter-row">
-      <fieldset>
-        <legend>Continent</legend>
-        <select id="continent-select" name="continent">
-          <option value="">All Continents</option>
-          {% for cont in continents %}
-            <option value="{{ cont }}" {% if cont == selected_continent %}selected{% endif %}>{{ cont }}</option>
-          {% endfor %}
-        </select>
-      </fieldset>
+  <div class="filter-row">
+    <fieldset>
+      <legend>Continent</legend>
+      <select id="continent-select" name="continent">
+        <option value="">All Continents</option>
+        {% for cont in continents %}
+        <option value="{{ cont }}" {% if cont == selected_continent %}selected{% endif %}>{{ cont }}</option>
+        {% endfor %}
+      </select>
+    </fieldset>
 
-      <fieldset>
-        <legend>Country</legend>
-        <select id="country-select" name="country">
-          <option value="">All Countries</option>
-          {% for code, name in countries %}
-            <option value="{{ code }}" {% if code == selected_country %}selected{% endif %}>{{ name }}</option>
-          {% endfor %}
-        </select>
-      </fieldset>
-    </div>
+    <fieldset>
+      <legend>Country</legend>
+      <select id="country-select" name="country">
+        <option value="">All Countries</option>
+        {% for code, name in countries %}
+        <option value="{{ code }}" {% if code == selected_country %}selected{% endif %}>{{ name }}</option>
+        {% endfor %}
+      </select>
+    </fieldset>
+  </div>
 
+  <div class="filter-row">
     <fieldset>
       <legend>Sort</legend>
       <select name="sort">
@@ -50,9 +53,11 @@
         <option value="oldest" {% if sort == "oldest" %}selected{% endif %}>Oldest First</option>
       </select>
     </fieldset>
+  </div>
 
-    <button type="submit">Apply</button>
-  </form>
+  <button type="submit">Apply</button>
+</form>
+
 </section>
 
 <section class="post-list">

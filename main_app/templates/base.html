@@ -7,37 +7,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="shortcut icon" type="image/png" href="" />
     <link rel="stylesheet" href="{% static 'css/base.css'  %}" />
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
+      rel="stylesheet"
+    />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <title>Mosaic</title>
     {% block head %} {% endblock %}
   </head>
   <body>
     <header class="site-header">
-  <div class="header-logo-container">
-    <a href="{% url 'user_feed'%}">Mosaic</a>
-  </div>
-  <nav>
-    <ul class="nav-list">
-      {% if user.is_authenticated %}
-      <li>
-        <form id="logout-form" method="post" action="{% url 'logout' %}">
-          {% csrf_token %}
-          <button type="submit" class="nav-button">Log out</button>
-        </form>
-      </li>
-      <li><a href="{% url 'user_feed' %}" class="nav-link">Feeds</a></li>
-      <li><a href="{% url 'user_posts' %}" class="nav-link">My Page</a></li>
-      <li><a href="{% url 'post-create' %}" class="nav-link">Post</a></li>
-      {% else %}
-      <li><a href="{% url 'home' %}" class="nav-link">Login</a></li>
-      <li><a href="{% url 'signup' %}" class="nav-link">Signup</a></li>
-      {% endif %}
-    </ul>
-  </nav>
-</header>
-
-
+      <div class="header-logo-container">
+        <a href="{% url 'home'%}">Connectly</a>
+      </div>
+      <nav>
+        <ul class="nav-list">
+          {% if user.is_authenticated %}
+          <li>
+            <form id="logout-form" method="post" action="{% url 'logout' %}">
+              {% csrf_token %}
+              <button type="submit" class="nav-button">Log out</button>
+            </form>
+          </li>
+          <li><a href="{% url 'user_feed' %}" class="nav-link">Explore</a></li>
+          <li><a href="{% url 'post-create' %}" class="nav-link">Post</a></li>
+          <li><a href="{% url 'user_posts' %}" class="nav-link">My Page</a></li>
+          {% else %}
+          <li><a href="{% url 'home' %}" class="nav-link">Login</a></li>
+          <li><a href="{% url 'signup' %}" class="nav-link">Signup</a></li>
+          {% endif %}
+        </ul>
+      </nav>
+    </header>
     <main>{% block content %} {% endblock %}</main>
   </body>
 </html>
