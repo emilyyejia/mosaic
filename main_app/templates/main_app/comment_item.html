@@ -1,0 +1,27 @@
+<div class="comment-item">
+  <div class="comment-header">
+    <span class="comment-user">{{ comment.user.username }}</span>
+    <span class="comment-date">{{ comment.date|date:"M d, Y" }}</span>
+    {% if comment.user == request.user %}
+    <span class="comment-actions">
+      <a href="{% url 'comment-edit' comment.id %}">✏️</a> |
+      <a href="{% url 'comment-delete' comment.id %}">🗑️</a>
+    </span>
+    {% endif %}
+  </div>
+
+  <div class="comment-text">{{ comment.text }}</div>
+
+  <form method="post" action="{% url 'add-comment' comment.post.id %}">
+    {% csrf_token %} {{ comment_form.text }}
+    <input type="hidden" name="parent_id" value="{{ comment.id }}" />
+    <button type="submit">Reply</button>
+  </form>
+
+  {% for reply in comment.replies.all %} 
+  <div>
+  {% include 'main_app/comment_item.html' with comment=reply %}
+</div>
+
+  {% endfor %}
+</div>
