@@ -117,3 +117,40 @@ form.login button.btn.submit:hover {
 .legend-box.gray {
   background-color: #7F00FF;
 }
+.map-actions {
+  text-align: center;
+  margin-top: 2em;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.map-btn-form {
+  display: inline-block;
+}
+
+button.btn.action-btn {
+  background-color: #0d6efd;
+  color: white;
+  padding: 0.7rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+button.btn.action-btn:hover {
+  background-color: #0b5ed7;
+}
+.leaflet-tooltip.country-tooltip {
+  background-color: rgba(13, 110, 253, 0.85);
+  color: white;
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  box-shadow: 0 0 4px rgba(0,0,0,0.2);
+}
