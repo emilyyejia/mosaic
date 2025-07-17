@@ -15,7 +15,9 @@
     border: 1px solid #0d6efd;
     background-color: #f0f8ff;  
   }
+
 </style>
+
 {% endblock %}
 
 {% block content %}
@@ -24,7 +26,10 @@
     <h1>Your Global Community Awaits</h1>
 
     <div id="map"></div>
-    {{ user_countries|json_script:"userCountryData" }}
+
+    {{ userOnlyCountries|json_script:"userOnlyCountries" }}
+    {{ othersOnlyCountries|json_script:"othersOnlyCountries" }}
+    {{ sharedCountries|json_script:"sharedCountries" }}
 
     <script>
       document.addEventListener("DOMContentLoaded", function () {
@@ -34,9 +39,16 @@
           attribution: "© OpenStreetMap contributors",
         }).addTo(map);
 
-        const userCountries = JSON.parse(
-          document.getElementById("userCountryData").textContent
-        );
+        const userOnly = JSON.parse(document.getElementById("userOnlyCountries").textContent);
+        const othersOnly = JSON.parse(document.getElementById("othersOnlyCountries").textContent);
+        const shared = JSON.parse(document.getElementById("sharedCountries").textContent);
+
+        function getColor(code) {
+          if (shared.includes(code)) return "#ff9800";       // orange
+          if (userOnly.includes(code)) return "#008000";     // green
+          if (othersOnly.includes(code)) return "#7F00FF";   // violet 
+          return "#ccc";                                     // fallback
+        }
 
         fetch("https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson")
           .then((res) => res.json())
@@ -45,8 +57,8 @@
               style: function (feature) {
                 const isoCode = (feature.properties["ISO3166-1-Alpha-2"] || "").toUpperCase();
                 return {
-                  color: userCountries.includes(isoCode) ? "#2a9d8f" : "#ccc",
-                  fillOpacity: userCountries.includes(isoCode) ? 0.6 : 0.1,
+                  color: getColor(isoCode),
+                  fillOpacity: 0.6,
                   weight: 1,
                 };
               },
@@ -67,4 +79,13 @@
     </section>
   {% endif %}
 </section>
+<div id="legend">
+  <h4>Map Legend</h4>
+  <ul>
+    <li><span class="legend-box green"></span> Your countries</li>
+    <li><span class="legend-box orange"></span> Shared countries</li>
+    <li><span class="legend-box gray"></span> Other users' countries</li>
+  </ul>
+</div>
 {% endblock %}
+

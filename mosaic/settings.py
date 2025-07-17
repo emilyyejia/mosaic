@@ -160,7 +160,7 @@ AWS_QUERYSTRING_AUTH = False  # makes uploaded files publicly accessible
 MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com/"
 
 
-TRAVEL_SUGGESTION_API_KEY = os.environ.get('OTRAVEL_SUGGESTION_API_KEY','')
+TRAVEL_SUGGESTION_API_KEY = os.environ.get('TRAVEL_SUGGESTION_API_KEY','')
 
 
 import django_on_heroku

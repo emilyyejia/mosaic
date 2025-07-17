@@ -18,6 +18,30 @@ from collections import Counter
 from django.conf import settings
 # Initialize the Ollama client
 from taggit.models import Tag
+from django.http import JsonResponse
+from django.conf import settings
+import requests
+def travel_advisor_search(request):
+    query = request.GET.get('country')
+    if not query:
+        return JsonResponse({'error': 'No country provided'}, status=400)
+
+    url = "https://travel-advisor.p.rapidapi.com/locations/search"
+    headers = {
+        "X-RapidAPI-Key": settings.TRAVEL_SUGGESTION_API_KEY,
+        "X-RapidAPI-Host": "travel-advisor.p.rapidapi.com"
+    }
+    params = {
+        "query": query,
+        "limit": 1
+    }
+    print("HEADERS:", headers)
+    
+    response = requests.get(url, headers=headers, params=params)
+    print("STATUS CODE", response.status_code)
+    print("Response text", response.text)
+
+    return JsonResponse(response.json(), status=response.status_code)
 
 ollama_client = ollama.Client()
 
@@ -77,19 +101,31 @@ CONTINENT_COUNTRIES = {
     'AQ'
   ]}
 
+from django.contrib.auth.views import LoginView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q
+from main_app.models import Post
+
 class Home(LoginView):
     template_name = 'home.html'
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        
-        user_country_codes = list(
-            Post.objects.exclude(country="").values_list("country", flat=True).distinct()
-        )
-        user_country_codes = [str(code).upper() for code in user_country_codes]
-        
-        context['user_countries'] = user_country_codes
-        
-        return context    
+        if not self.request.user.is_authenticated:
+            return context
+        all_posts = Post.objects.exclude(country="").select_related('user')
+        user_posts = all_posts.filter(user=self.request.user)
+        user_countries = set(str(post.country).upper() for post in user_posts)
+        others_posts = all_posts.exclude(user=self.request.user)
+        others_countries = set(str(post.country).upper() for post in others_posts)
+        shared = user_countries & others_countries
+        user_only = user_countries - others_countries
+        others_only = others_countries - user_countries
+        context['userOnlyCountries'] = list(user_only)
+        context['othersOnlyCountries'] = list(others_only)
+        context['sharedCountries'] = list(shared)
+
+        return context
+
 
 def post_detail(request, post_id):  
     post = Post.objects.get(id=post_id)

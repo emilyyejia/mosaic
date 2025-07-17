@@ -156,8 +156,7 @@ $(document).ready(function() {
   $('#country-select').select2({ placeholder: "Select Country", allowClear: true });
 });
 </script>
-
-
+<!-- 
 {{ top_country_names|json_script:"topCountriesData" }}
 
 <section>
@@ -169,30 +168,38 @@ $(document).ready(function() {
 
 <script>
 const countries = JSON.parse(document.getElementById("topCountriesData").textContent);
- const apiKey = "{{ TRAVEL_SUGGESTION_API_KEY|escapejs }}";
 
 document.addEventListener("DOMContentLoaded", () => {
   const listEl = document.getElementById("recommendation-list");
   listEl.innerHTML = "";
 
   countries.forEach(country => {
-    fetch(`https://api.opentripmap.com/0.1/en/places/geoname?name=${country}&apikey=${apiKey}`)
-      .then(res => res.json())
-      .then(geo => {
-        if (!geo.lat || !geo.lon) return;
-
-        fetch(`https://api.opentripmap.com/0.1/en/places/radius?radius=10000&lon=${geo.lon}&lat=${geo.lat}&limit=1&apikey=${apiKey}`)
-          .then(res => res.json())
-          .then(data => {
-            if (data.features && data.features.length > 0) {
-              const place = data.features[0].properties;
-              const item = document.createElement("li");
-              item.innerHTML = `<strong>${place.name}</strong> in ${country} - ${place.kinds || 'No category'}`;
-              listEl.appendChild(item);
-            }
-          });
+    fetch(`/api/travel_search/?country=${encodeURIComponent(country)}`)
+      .then(res => {
+        if (!res.ok) throw new Error(`Request failed with status ${res.status}`);
+        return res.json();
+      })
+      .then(data => {
+        const result = data?.data?.[0];
+        if (result && result.result_object) {
+          const place = result.result_object;
+          const item = document.createElement("li");
+          item.innerHTML = `<strong>${place.name}</strong> (${place.location_string}) - ${result.result_type}`;
+          listEl.appendChild(item);
+        } else {
+          throw new Error("No result found");
+        }
+      })
+      .catch(err => {
+        console.error("API error:", err);
+        const errMsg = document.createElement("li");
+        errMsg.textContent = `Could not fetch info for ${country}`;
+        listEl.appendChild(errMsg);
       });
   });
 });
-</script>
+</script> -->
+
+
+
 {% endblock %}
