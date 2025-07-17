@@ -35,7 +35,7 @@ nav li {
 
 nav ul li a,
 nav ul li button {
-  color: #0d6efd; 
+  color: #0d6efd;
   text-decoration: none;
   background: none;
   border: none;
@@ -46,14 +46,15 @@ nav ul li button {
 
 nav ul li button:hover,
 nav ul li a:hover {
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 #logout-form {
   margin: 0;
 }
 
-html, body {
+html,
+body {
   height: 100%;
   margin: 0;
   padding: 0;
@@ -62,13 +63,12 @@ html, body {
 body {
   font-family: Arial, sans-serif;
   background-color: #f9f9f9;
-  
+
   display: flex;
   flex-direction: column;
-  min-height: 100vh; 
+  min-height: 100vh;
 }
 
-
 main {
-  flex: 1; 
+  flex: 1;
 }
