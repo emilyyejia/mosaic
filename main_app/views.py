@@ -14,7 +14,34 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.utils.translation import get_language
 import ollama
+from collections import Counter
+from django.conf import settings
+# Initialize the Ollama client
 from taggit.models import Tag
+from django.http import JsonResponse
+from django.conf import settings
+import requests
+def travel_advisor_search(request):
+    query = request.GET.get('country')
+    if not query:
+        return JsonResponse({'error': 'No country provided'}, status=400)
+
+    url = "https://travel-advisor.p.rapidapi.com/locations/search"
+    headers = {
+        "X-RapidAPI-Key": settings.TRAVEL_SUGGESTION_API_KEY,
+        "X-RapidAPI-Host": "travel-advisor.p.rapidapi.com"
+    }
+    params = {
+        "query": query,
+        "limit": 1
+    }
+    print("HEADERS:", headers)
+    
+    response = requests.get(url, headers=headers, params=params)
+    print("STATUS CODE", response.status_code)
+    print("Response text", response.text)
+
+    return JsonResponse(response.json(), status=response.status_code)
 
 ollama_client = ollama.Client()
 
@@ -74,19 +101,31 @@ CONTINENT_COUNTRIES = {
     'AQ'
   ]}
 
+from django.contrib.auth.views import LoginView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q
+from main_app.models import Post
+
 class Home(LoginView):
     template_name = 'home.html'
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        
-        user_country_codes = list(
-            Post.objects.exclude(country="").values_list("country", flat=True).distinct()
-        )
-        user_country_codes = [str(code).upper() for code in user_country_codes]
-        
-        context['user_countries'] = user_country_codes
-        
-        return context    
+        if not self.request.user.is_authenticated:
+            return context
+        all_posts = Post.objects.exclude(country="").select_related('user')
+        user_posts = all_posts.filter(user=self.request.user)
+        user_countries = set(str(post.country).upper() for post in user_posts)
+        others_posts = all_posts.exclude(user=self.request.user)
+        others_countries = set(str(post.country).upper() for post in others_posts)
+        shared = user_countries & others_countries
+        user_only = user_countries - others_countries
+        others_only = others_countries - user_countries
+        context['userOnlyCountries'] = list(user_only)
+        context['othersOnlyCountries'] = list(others_only)
+        context['sharedCountries'] = list(shared)
+
+        return context
+
 
 def post_detail(request, post_id):  
     post = Post.objects.get(id=post_id)
@@ -174,19 +213,31 @@ def user_feed(request):
         posts = posts.order_by("-created_at")
     elif sort == "oldest":
         posts = posts.order_by("created_at")
-
+    user = request.user
+    interest_counter = Counter()
+    user_post_countries = Post.objects.filter(user=user).values_list('country', flat=True)
+    interest_counter.update({code: 2 for code in user_post_countries if code})
+    commented_post_ids = Comment.objects.filter(user=user).values_list('post_id', flat=True)
+    commented_countries = Post.objects.filter(id__in=commented_post_ids).values_list('country', flat=True)
+    interest_counter.update({code: 1 for code in commented_countries if code})
+    top_country_codes = [code for code, _ in interest_counter.most_common(3)]
+    top_country_names = [dict(countries).get(code, code) for code in top_country_codes]
     context = {
         "posts": posts,
-        "continents": continents,
-        "countries": filtered_countries,
-        "selected_continent": selected_continent,
-        "selected_country": selected_country,
-        "query": query,
-        "tags_only": tags_only,
-        "sort": sort,
-        "country_name_map": country_name_map,
+        "continents": list(CONTINENT_COUNTRIES.keys()),
+        "countries": list(countries),
+        "selected_continent": request.GET.get("continent"),
+        "selected_country": request.GET.get("country"),
+        "query": request.GET.get("q", "").strip(),
+        "tags_only": request.GET.get("tags_only"),
+        "sort": request.GET.get("sort", "recent"),
+        "country_name_map": {code: name for code, name in countries},
+        "top_country_codes": top_country_codes,
+        "top_country_names": top_country_names,  
+        "TRAVEL_SUGGESTION_API_KEY": settings.TRAVEL_SUGGESTION_API_KEY,
     }
     return render(request, "posts/user_feed.html", context)
+    
 
 @login_required
 def add_comment(request, post_id):

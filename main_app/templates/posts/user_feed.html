@@ -156,5 +156,50 @@ $(document).ready(function() {
   $('#country-select').select2({ placeholder: "Select Country", allowClear: true });
 });
 </script>
+<!-- 
+{{ top_country_names|json_script:"topCountriesData" }}
+
+<section>
+<h2> Travel Recommendations based on your history:</h2>
+<ul id="recommendation-list">
+  <li>Loading recommendations...</li>
+</ul>
+</section>
+
+<script>
+const countries = JSON.parse(document.getElementById("topCountriesData").textContent);
+
+document.addEventListener("DOMContentLoaded", () => {
+  const listEl = document.getElementById("recommendation-list");
+  listEl.innerHTML = "";
+
+  countries.forEach(country => {
+    fetch(`/api/travel_search/?country=${encodeURIComponent(country)}`)
+      .then(res => {
+        if (!res.ok) throw new Error(`Request failed with status ${res.status}`);
+        return res.json();
+      })
+      .then(data => {
+        const result = data?.data?.[0];
+        if (result && result.result_object) {
+          const place = result.result_object;
+          const item = document.createElement("li");
+          item.innerHTML = `<strong>${place.name}</strong> (${place.location_string}) - ${result.result_type}`;
+          listEl.appendChild(item);
+        } else {
+          throw new Error("No result found");
+        }
+      })
+      .catch(err => {
+        console.error("API error:", err);
+        const errMsg = document.createElement("li");
+        errMsg.textContent = `Could not fetch info for ${country}`;
+        listEl.appendChild(errMsg);
+      });
+  });
+});
+</script> -->
+
+
 
 {% endblock %}

@@ -69,3 +69,51 @@ form.login button.btn.submit {
 form.login button.btn.submit:hover {
   background: #0d6efd;
 }
+#legend {
+  max-width: 600px;
+  margin: 0 auto 2em auto;
+  padding: 0.5em 1em;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f8f9fa;
+  font-size: 0.95em;
+}
+
+#legend h4 {
+  margin-top: 0;
+  margin-bottom: 0.5em;
+  font-size: 1.1em;
+}
+
+#legend ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#legend li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.3em;
+}
+
+.legend-box {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+  border: 1px solid #888;
+  border-radius: 2px;
+}
+
+.legend-box.green {
+  background-color: #008000;
+}
+
+.legend-box.orange {
+  background-color: #ff9800;
+}
+
+.legend-box.gray {
+  background-color: #7F00FF;
+}

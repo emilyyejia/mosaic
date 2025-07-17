@@ -22,7 +22,6 @@ env.read_env(env_file=BASE_DIR / '.env')
 # env.read_env(env_file=BASE_DIR / '.env')
 # print("DB_USER from env:", env("DB_USER", default="NOT FOUND"))
 
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 
 
@@ -159,6 +158,9 @@ AWS_S3_REGION_NAME = os.environ.get('AWS_S3_REGION_NAME')  # e.g. 'us-west-1'
 AWS_QUERYSTRING_AUTH = False  # makes uploaded files publicly accessible
 
 MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com/"
+
+
+TRAVEL_SUGGESTION_API_KEY = os.environ.get('TRAVEL_SUGGESTION_API_KEY','')
 
 
 import django_on_heroku
