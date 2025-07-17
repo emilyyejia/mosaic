@@ -161,3 +161,15 @@
   display: block;
   margin-bottom: 10px;
 }
+
+#recommendation-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 1em;
+}
+#recommendation-list li {
+  background: #f0f8ff;
+  padding: 0.8em;
+  border-radius: 8px;
+  margin-bottom: 0.5em;
+}

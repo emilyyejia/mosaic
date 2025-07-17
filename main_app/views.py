@@ -13,7 +13,8 @@ from django_countries import countries
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import ollama
-
+from collections import Counter
+from django.conf import settings
 # Initialize the Ollama client
 ollama_client = ollama.Client()
 
@@ -163,19 +164,31 @@ def user_feed(request):
         posts = posts.order_by("-created_at")
     elif sort == "oldest":
         posts = posts.order_by("created_at")
-
+    user = request.user
+    interest_counter = Counter()
+    user_post_countries = Post.objects.filter(user=user).values_list('country', flat=True)
+    interest_counter.update({code: 2 for code in user_post_countries if code})
+    commented_post_ids = Comment.objects.filter(user=user).values_list('post_id', flat=True)
+    commented_countries = Post.objects.filter(id__in=commented_post_ids).values_list('country', flat=True)
+    interest_counter.update({code: 1 for code in commented_countries if code})
+    top_country_codes = [code for code, _ in interest_counter.most_common(3)]
+    top_country_names = [dict(countries).get(code, code) for code in top_country_codes]
     context = {
         "posts": posts,
-        "continents": continents,
-        "countries": filtered_countries,
-        "selected_continent": selected_continent,
-        "selected_country": selected_country,
-        "query": query,
-        "tags_only": tags_only,
-        "sort": sort,
-        "country_name_map": country_name_map,
+        "continents": list(CONTINENT_COUNTRIES.keys()),
+        "countries": list(countries),
+        "selected_continent": request.GET.get("continent"),
+        "selected_country": request.GET.get("country"),
+        "query": request.GET.get("q", "").strip(),
+        "tags_only": request.GET.get("tags_only"),
+        "sort": request.GET.get("sort", "recent"),
+        "country_name_map": {code: name for code, name in countries},
+        "top_country_codes": top_country_codes,
+        "top_country_names": top_country_names,  
+        "TRAVEL_SUGGESTION_API_KEY": settings.TRAVEL_SUGGESTION_API_KEY,
     }
     return render(request, "posts/user_feed.html", context)
+    
 
 @login_required
 def add_comment(request, post_id):

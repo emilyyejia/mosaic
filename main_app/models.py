@@ -13,7 +13,7 @@ class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     body = models.TextField(max_length=500)
-    tags = models.CharField(max_length=100)
+    tags = models.CharField(max_length=100, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     country = CountryField(blank=True, null=True)
     image = models.ImageField(
