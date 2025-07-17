@@ -1,4 +1,13 @@
-{% extends 'base.html' %} {% block content %}
+{% extends 'base.html' %} {% load static %}
+
+<head>
+  {% block head %}
+  <link rel="stylesheet" href="{% static 'css/posts/user_feed.css' %}" />
+  {% endblock %}
+</head>
+
+{% block content %}
+
 <section class="page-header">
   <h1>Posts tagged with "{{ tag.name }}"</h1>
 </section>
@@ -8,6 +17,22 @@
   <article class="post-item">
     <h2><a href="{% url 'post_detail' post.id %}">{{ post.title }}</a></h2>
     <p>{{ post.body|truncatewords:30 }}</p>
+
+    {% if post.tags.all %}
+    <div class="post-tags">
+      {% for tag in post.tags.all %}
+      <a href="{% url 'posts_by_tag' tag.slug %}" class="tag-link"
+        >{{ tag.name }}</a
+      >
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <p><strong>Country:</strong> {{ post.country.name }}</p>
+
+    {% if post.image %}
+    <img src="{{ post.image.url }}" alt="{{ post.title }}" class="post-img" />
+    {% endif %}
     <p>Posted by: {{ post.user.username }}</p>
   </article>
   {% empty %}

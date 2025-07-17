@@ -7,7 +7,7 @@
 
 {% block content %}
 <section class="page-header">
-  <h1>My Feed (All Posts)</h1>
+  <h1>My Feed </h1>
 </section>
 
 <section class="filter-search">
@@ -62,9 +62,8 @@
 
 <section class="post-list">
   {% for post in posts %}
-    <a href="{% url 'post_detail' post.id %}" class="post-card-link">
       <article class="post-item">
-        <h2>{{ post.title }}</h2>
+        <h2><a href="{% url 'post_detail' post.id %}">{{ post.title }}</a></h2>
         <p>{{ post.body|truncatewords:30 }}</p>
        {% if post.tags.all %}
         <p class="post-tags">
@@ -79,7 +78,6 @@
     {% endif %}
         <p>Posted by: {{ post.user.username }}</p>
       </article>
-    </a>
   {% empty %}
     <p>No posts available.</p>
   {% endfor %}

@@ -7,7 +7,9 @@
     <p>{{ post.body}}</p>
     <p>Country: {{ post.country.name }}</p>
     {% if post.image %}
+    <div class="img-wrapper">
     <img src="{{ post.image.url }}" alt="{{ post.title }}" class="post-img" />
+    </div>
     {% endif %}
   </div>
   <p>
