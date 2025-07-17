@@ -15,7 +15,7 @@
     <span class="tag">{{ tag.name }}</span>
     {% if not forloop.last %} No tags yet.{% endif %} {% endfor %}
   </p>
-  <button id="translate-btn">To {{ request.LANGUAGE_CODE }}</button>
+  <button id="translate-btn">{{ request.LANGUAGE_CODE }}</button>
   <div id="translated-body">{{ post.body }}</div>
 
   <script>

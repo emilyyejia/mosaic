@@ -16,7 +16,6 @@ from django.utils.translation import get_language
 import ollama
 from taggit.models import Tag
 
-# Initialize the Ollama client
 ollama_client = ollama.Client()
 
 def get_translated_post(request, post_id):
@@ -38,7 +37,6 @@ def get_translated_post(request, post_id):
         'body': translated_body
     })
     
-#country dictionary
 CONTINENT_COUNTRIES = {
   'Africa': [
     'DZ', 'AO', 'BJ', 'BW', 'BF', 'BI', 'CM', 'CV', 'CF', 'TD', 'KM',
@@ -78,6 +76,17 @@ CONTINENT_COUNTRIES = {
 
 class Home(LoginView):
     template_name = 'home.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        user_country_codes = list(
+            Post.objects.exclude(country="").values_list("country", flat=True).distinct()
+        )
+        user_country_codes = [str(code).upper() for code in user_country_codes]
+        
+        context['user_countries'] = user_country_codes
+        
+        return context    
 
 def post_detail(request, post_id):  
     post = Post.objects.get(id=post_id)
@@ -88,8 +97,6 @@ def post_detail(request, post_id):
 class PostCreate(LoginRequiredMixin, CreateView):
     model = Post
     form_class = PostForm 
-    # fields = ['title', 'body', 'tags', 'country', 'image']
-    # success_url = '/user_feed/'
     def form_valid(self, form):
         form.instance.user = self.request.user  
         return super().form_valid(form)
