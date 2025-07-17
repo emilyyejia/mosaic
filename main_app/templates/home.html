@@ -51,22 +51,41 @@
         }
 
         fetch("https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson")
-          .then((res) => res.json())
-          .then((data) => {
-            L.geoJSON(data, {
-              style: function (feature) {
-                const isoCode = (feature.properties["ISO3166-1-Alpha-2"] || "").toUpperCase();
-                return {
-                  color: getColor(isoCode),
-                  fillOpacity: 0.6,
-                  weight: 1,
-                };
-              },
-            }).addTo(map);
-          });
+  .then((res) => res.json())
+  .then((data) => {
+    L.geoJSON(data, {
+      style: function (feature) {
+        const isoCode = (feature.properties["ISO3166-1-Alpha-2"] || "").toUpperCase();
+        return {
+          color: getColor(isoCode),
+          fillOpacity: 0.6,
+          weight: 1,
+        };
+      },
+      onEachFeature: function (feature, layer) {
+        const isoCode = (feature.properties["ISO3166-1-Alpha-2"] || "").toUpperCase();
+        const countryName = feature.properties.name || "Unknown";
+
+        layer.on("click", function () {
+          window.location.href = `/user_feed/?country=${isoCode}`;
+        });
+
+        layer.bindTooltip(countryName, { permanent: false, direction: "center", className: "country-tooltip" });
+        layer.setStyle({ cursor: "pointer" }); // changes cursor to pointer on hover
+      }
+    }).addTo(map);
+  });
+
       });
     </script>
-
+   <div class="map-actions">
+  <form action="{% url 'user_feed' %}" method="get" class="map-btn-form">
+    <button type="submit" class="btn action-btn">View Your Feed</button>
+  </form>
+  <form action="{% url 'user_posts' %}" method="get" class="map-btn-form">
+    <button type="submit" class="btn action-btn">View Your Profile</button>
+  </form>
+</div>
   {% else %}
     <section>
       <form action="{% url 'home' %}" method="post" class="login">
@@ -77,15 +96,20 @@
         <button type="submit" class="btn submit">Login</button>
       </form>
     </section>
+ 
   {% endif %}
 </section>
+  {% if user.is_authenticated %}
 <div id="legend">
+
   <h4>Map Legend</h4>
   <ul>
     <li><span class="legend-box green"></span> Your countries</li>
     <li><span class="legend-box orange"></span> Shared countries</li>
     <li><span class="legend-box gray"></span> Other users' countries</li>
   </ul>
+
 </div>
+  {%endif%}
 {% endblock %}
 
