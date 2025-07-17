@@ -11,30 +11,32 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django_countries import countries
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import get_object_or_404
+from django.utils.translation import get_language
 import ollama
 from taggit.models import Tag
 
 # Initialize the Ollama client
 ollama_client = ollama.Client()
 
-# Load your Ollama model
+def get_translated_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    language_code = get_language()
 
-@csrf_exempt
-def translate(request):
-    if request.method == 'POST':
-        data = request.POST.get('input')
+    if language_code.startswith('en'):  
+        translated_body = post.body
+    else:
         response = ollama_client.generate(
             model="llama3",
-            prompt=f"Translate this to Chinese: {data}",
+            prompt=f"Translate the following to {language_code}: {post.body}",
             stream=False
         )
+        translated_body = response['response']
 
-        translation = response['response']        
-
-        return JsonResponse({'translation': translation})
-    else:
-        return JsonResponse({'error': 'POST request required'})
+    return JsonResponse({
+        'title': post.title,
+        'body': translated_body
+    })
     
 #country dictionary
 CONTINENT_COUNTRIES = {
