@@ -35,7 +35,6 @@ We created **Connectly** to bring storytelling back to the heart of social inter
 <details>
   <summary>🏠 User Feed</summary>
 
-| Feed of curated user posts                           |
 | ---------------------------------------------------- |
 | ![Feed](./main_app/static/images/user-feed-page.png) |
 
@@ -44,7 +43,6 @@ We created **Connectly** to bring storytelling back to the heart of social inter
 <details>
   <summary>📝 Post Detail Page</summary>
 
-| Full post content with tags, country, and user    |
 | ------------------------------------------------- |
 | ![Post](./main_app/static/images/post-detail.png) |
 
@@ -53,7 +51,6 @@ We created **Connectly** to bring storytelling back to the heart of social inter
 <details>
   <summary>🔎 Filter/Search</summary>
 
-| Search posts by continent, country, tags       |
 | ---------------------------------------------- |
 | ![Search](./main_app/static/images/filter.png) |
 
@@ -61,9 +58,8 @@ We created **Connectly** to bring storytelling back to the heart of social inter
 <details>
   <summary>🙋‍♀️ User Profile Page</summary>
 
-| View of a user's posts, map, and country data |
 | --------------------------------------------- |
-| ![User](./main_app/static/images/mypage.png)  |
+| ![User](./main_app/static/images/mypage.png) |
 
 </details>
 
@@ -87,15 +83,14 @@ We created **Connectly** to bring storytelling back to the heart of social inter
 
 ## 📦 Third-Party Packages & Services
 
-- [`django-taggit`](https://github.com/jazzband/django-taggit) – Tagging system for posts
-- [`boto3`](https://github.com/boto/boto3) & [`django-storages`](https://github.com/jschneier/django-storages) – Integration with AWS S3 for media storage
+- **django-taggit** – Tagging system for posts
+- **boto3 & django-storages** – Integration with AWS S3 for media storage
 - **AWS S3** – Used for storing and serving uploaded images
 
 ---
 
 ## 🙌 Attributions
 
-- **Map Integration**:
 - **Favicon & Illustrations**: [Unsplash](https://unsplash.com)
 - **Icons**: [Font Awsome](https://fontawesome.com/)
 
