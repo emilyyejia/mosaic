@@ -57,9 +57,9 @@
   font-size: 0.95rem;
   border-radius: 6px;
   font-weight: 500;
-  background-color: #0d6efd; 
-  color: white;                
-  border: none;           
+  background-color: #0d6efd;
+  color: white;
+  border: none;
   transition: background-color 0.3s ease;
   max-width: 150px;
 }
@@ -72,10 +72,15 @@
   transition: background-color 0.3s ease;
 }
 
+.img-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .post-img {
-  max-width: 100%;
+  max-width: 70%;
   height: auto;
-  margin-top: 1rem;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
