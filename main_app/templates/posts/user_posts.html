@@ -20,17 +20,7 @@
 
 <section class="post-list">
   {% for post in posts %}
-  <a href="{% url 'post_detail' post.id %}" class="post-card-link">
-    <article
-      class="post-item"
-      style="
-        border: 1px solid #ddd;
-        border-radius: 10px;
-        padding: 1em;
-        margin-bottom: 1em;
-        background: #fafafa;
-      "
-    >
+    <article class="post-item">
       <h2><a href="{% url 'post_detail' post.id %}">{{ post.title }}</a></h2>
       <p>{{ post.body|truncatewords:25 }}</p>
       {% if post.tags.all %}

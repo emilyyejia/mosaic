@@ -2,6 +2,10 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -32,15 +36,25 @@
           <li>
             <form id="logout-form" method="post" action="{% url 'logout' %}">
               {% csrf_token %}
-              <button type="submit" class="nav-button">Log out</button>
+              <button type="submit" class="fas fa-sign-out-alt"></button>
             </form>
           </li>
-          <li><a href="{% url 'user_feed' %}" class="nav-link">Explore</a></li>
-          <li><a href="{% url 'post-create' %}" class="nav-link">Post</a></li>
-          <li><a href="{% url 'user_posts' %}" class="nav-link">My Page</a></li>
+          <li>
+            <a href="{% url 'user_feed' %}" class="fas fa-compass"></a>
+          </li>
+          <li>
+            <a href="{% url 'post-create' %}" class="fas fa-plus-circle"></a>
+          </li>
+          <li>
+            <a href="{% url 'user_posts' %}" class="fas fa-user"></a>
+          </li>
           {% else %}
-          <li><a href="{% url 'home' %}" class="nav-link">Login</a></li>
-          <li><a href="{% url 'signup' %}" class="nav-link">Signup</a></li>
+          <li>
+            <a href="{% url 'home' %}" class="fas fa-right-to-bracket"></a>
+          </li>
+          <li>
+            <a href="{% url 'signup' %}" class="fas fa-user-plus"></a>
+          </li>
           {% endif %}
         </ul>
       </nav>

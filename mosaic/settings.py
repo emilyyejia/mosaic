@@ -90,7 +90,7 @@ WSGI_APPLICATION = 'mosaic.wsgi.application'
 DATABASES = {
     'default': {
       'ENGINE': 'django.db.backends.postgresql',
-      'NAME': 'mosaic',
+      'NAME': 'connectly',
       'USER': env('DB_USER'),
       'PASSWORD': env('DB_PW'),
       'HOST': env('DB_HOST'),

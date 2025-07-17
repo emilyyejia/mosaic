@@ -7,93 +7,78 @@
 }
 
 .filter-search {
-  max-width: 900px;
-  margin: 0 auto;
   padding: 1rem;
-  text-align: left;
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  max-width: 1000px;
+  margin: 2rem auto;
 }
 
-.feed-filters {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem; /* space between rows */
-  max-width: 900px;
-  margin: 0 auto;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-}
-
-/* Each filter row stacked vertically */
 .filter-row {
   display: flex;
-  flex-direction: column;
-  gap: 0.5rem; /* space between label and input */
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.2rem;
 }
 
-/* Styling for fieldset and legend */
 .feed-filters fieldset {
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  padding: 0.75rem 1rem;
-  background-color: #f9f9f9;
+  flex: 1 1 250px;
+  min-width: 200px;
+  border: none;
+  padding: 0;
 }
 
 .feed-filters legend {
+  font-size: 0.9rem;
   font-weight: 600;
-  padding: 0 0.5rem;
-  font-size: 1rem;
+  color: #333;
+  margin-bottom: 0.4rem;
 }
 
-/* Inputs, selects and checkbox aligned nicely */
 .feed-filters input[type="text"],
 .feed-filters select {
-  max-width: 320px;
-  height: 2.2rem;
-  padding: 0.25rem 0.5rem;
-  font-size: 1rem;
-  border-radius: 4px;
+  width: 90%;
+  padding: 0.6rem 0.75rem;
   border: 1px solid #ccc;
-  outline-offset: 2px;
-  outline-color: transparent;
-  transition: outline-color 0.3s ease;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  background-color: #f9f9f9;
+  transition: border 0.2s;
 }
 
 .feed-filters input[type="text"]:focus,
 .feed-filters select:focus {
-  outline-color: #0d6efd;
-  border-color: #0d6efd;
+  border-color: #2a9d8f;
+  outline: none;
+  background-color: #fff;
 }
 
-/* Checkbox label inline with checkbox */
 .feed-filters label {
-  display: flex;
+  font-size: 0.85rem;
+  color: #555;
+  display: inline-flex;
   align-items: center;
-  gap: 0.3rem;
-  font-size: 0.95rem;
-  user-select: none;
-  max-width: 320px;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
 }
 
-/* Style for the submit button */
-.feed-filters button {
-  max-width: 150px;
-  cursor: pointer;
-  background-color: #0d6efd;
-  border: none;
+.feed-filters button[type="submit"] {
+  padding: 0.7rem 1.4rem;
+  background-color: #225db0;
   color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
+  border: none;
+  border-radius: 10px;
   font-weight: 600;
-  font-size: 1rem;
-  align-self: flex-start;
-  transition: background-color 0.3s ease;
-  box-shadow: 0 2px 6px rgba(13, 110, 253, 0.4);
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
 }
 
-.feed-filters button:hover {
-  background-color: #084298;
-  box-shadow: 0 3px 8px rgba(8, 66, 152, 0.6);
+.feed-filters button[type="submit"]:hover {
+  background-color: #2b7493;
 }
-
 /* Post list styles remain the same */
 .post-list {
   max-width: 900px;
