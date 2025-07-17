@@ -2,28 +2,31 @@
 
 ## Welcome to **Connectly – Where Shared Experiences Truly Connect!**
 
-**Connectly** is a social storytelling web app designed for everyday users to share personal stories, ideas, and inspiration — from travel and culture to lifestyle and local gems. Think of it as a digital wall of voices, where every post is a meaningful piece of a shared experience.
+**Connectly** is a social storytelling web app where users can share personal stories, ideas, and inspiration — from travel and culture to lifestyle and local gems. Think of it as a digital wall of voices, where every post is a meaningful piece of a shared experience.
 
-Connectly offers a space to:
+### 🌍 What You Can Do on Connectly
 
 - 📝 Create and publish posts with text, tags, and images
 - 🏷️ Browse by topics, countries, or categories
-- 💬 Comment and engage with others' posts
-- 📸 Share photos and personal experiences
-- 🔍 Filter and search for content by interest or region
+- 💬 Comment and engage with others' stories
+- 📸 Share photos and meaningful experiences
+- 🔍 Filter and search content by interest or region
 
 ---
 
 ## 💡 Why We Built It
 
-We created **Connectly** to make storytelling feel personal again. Most social media platforms today focus on virality, likes, and trends — not meaningful experiences.
+We created **Connectly** to bring storytelling back to the heart of social interaction. While most platforms focus on trends and virality, Connectly is about **genuine expression**.
 
-Every user can:
+## ✨ What Users Can Do
 
-- Post freely on topics they care about
-- Upload meaningful images or travel content
-- Use tags to make content discoverable
-- Interact directly and respectfully with others
+📝 Share stories on topics they’re passionate about
+
+📷 Upload personal photos, travel memories, and life moments
+
+🏷️ Add tags to organize and surface content more easily
+
+💬 Engage meaningfully with others through comments and shared experiences
 
 ---
 
@@ -82,16 +85,28 @@ Every user can:
 
 ---
 
+## 📦 Third-Party Packages & Services
+
+- [`django-taggit`](https://github.com/jazzband/django-taggit) – Tagging system for posts
+- [`boto3`](https://github.com/boto/boto3) & [`django-storages`](https://github.com/jschneier/django-storages) – Integration with AWS S3 for media storage
+- **AWS S3** – Used for storing and serving uploaded images
+
+---
+
 ## 🙌 Attributions
 
 - **Map Integration**:
-- **Fonts**: [Google Fonts](https://fonts.google.com)
 - **Favicon & Illustrations**: [Unsplash](https://unsplash.com)
+- **Icons**: [Font Awsome](https://fontawesome.com/)
 
 ---
 
 ## 🌱 Next Steps
 
-- 🧑‍💻 User profile pages with post history
-- 💌 Private messaging or replies
-- 📣 Tag following and trending topics
+🧑‍💻 User profile pages with bio & post history
+
+⭐ Follow storytellers & get notifications
+
+💌 Private messaging (DMs)
+
+❤️ Favorite/save posts to personal

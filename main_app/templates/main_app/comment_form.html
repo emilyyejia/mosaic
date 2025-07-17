@@ -1,11 +1,39 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {% block content %}
 
-{% block content %}
-  <h2>Edit Comment</h2>
-  <form method="post" autocomplete="off">
+<div style="max-width: 500px; margin: 3rem auto; text-align: center">
+  <h2 style="color: #357094; margin-bottom: 1.5rem">Edit Comment</h2>
+
+  <form
+    method="post"
+    autocomplete="off"
+    style="
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      align-items: center;
+    "
+  >
     {% csrf_token %}
-    {{ form.as_p }}
-    <input type="hidden" name="parent_id" value="{{ parent_comment_id }}">
-    <button type="submit" class="btn submit">Save</button>
+
+    <div style="width: 100%; text-align: center">{{ form.as_p }}</div>
+
+    <input type="hidden" name="parent_id" value="{{ parent_comment_id }}" />
+
+    <button
+      type="submit"
+      style="
+        padding: 0.5rem 1rem;
+        background: #357094;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: 600;
+      "
+    >
+      Save Changes
+    </button>
   </form>
+</div>
+
 {% endblock %}
