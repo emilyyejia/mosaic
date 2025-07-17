@@ -4,39 +4,42 @@ from django.views.generic import ListView, DetailView, CreateView
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
 from .models import Post, Comment
-from .forms import CommentForm
+from .forms import PostForm, CommentForm
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django_countries import countries
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import get_object_or_404
+from django.utils.translation import get_language
 import ollama
 from collections import Counter
 from django.conf import settings
 # Initialize the Ollama client
+from taggit.models import Tag
+
 ollama_client = ollama.Client()
 
-# Load your Ollama model
+def get_translated_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    language_code = get_language()
 
-@csrf_exempt
-def translate(request):
-    if request.method == 'POST':
-        data = request.POST.get('input')
+    if language_code.startswith('en'):  
+        translated_body = post.body
+    else:
         response = ollama_client.generate(
             model="llama3",
-            prompt=f"Translate this to Chinese: {data}",
+            prompt=f"Translate the following to {language_code}: {post.body}",
             stream=False
         )
+        translated_body = response['response']
 
-        translation = response['response']        
-
-        return JsonResponse({'translation': translation})
-    else:
-        return JsonResponse({'error': 'POST request required'})
+    return JsonResponse({
+        'title': post.title,
+        'body': translated_body
+    })
     
-#country dictionary
 CONTINENT_COUNTRIES = {
   'Africa': [
     'DZ', 'AO', 'BJ', 'BW', 'BF', 'BI', 'CM', 'CV', 'CF', 'TD', 'KM',
@@ -76,6 +79,17 @@ CONTINENT_COUNTRIES = {
 
 class Home(LoginView):
     template_name = 'home.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        user_country_codes = list(
+            Post.objects.exclude(country="").values_list("country", flat=True).distinct()
+        )
+        user_country_codes = [str(code).upper() for code in user_country_codes]
+        
+        context['user_countries'] = user_country_codes
+        
+        return context    
 
 def post_detail(request, post_id):  
     post = Post.objects.get(id=post_id)
@@ -85,8 +99,7 @@ def post_detail(request, post_id):
 
 class PostCreate(LoginRequiredMixin, CreateView):
     model = Post
-    fields = ['title', 'body', 'tags', 'country', 'image']
-    # success_url = '/user_feed/'
+    form_class = PostForm 
     def form_valid(self, form):
         form.instance.user = self.request.user  
         return super().form_valid(form)
@@ -153,12 +166,12 @@ def user_feed(request):
     posts = posts.filter(country__in=country_codes)
     if query:
         if tags_only:
-            posts = posts.filter(tags__icontains=query)
+            posts = posts.filter(tags__name__icontains=query)
         else:
             posts = posts.filter(
                 Q(title__icontains=query) |
                 Q(body__icontains=query) |
-                Q(tags__icontains=query)
+                Q(tags__name__icontains=query)
             )
     if sort == "recent":
         posts = posts.order_by("-created_at")
@@ -192,20 +205,24 @@ def user_feed(request):
 
 @login_required
 def add_comment(request, post_id):
-    form = CommentForm(request.POST)
-    parent_id = request.POST.get("parent_id")
-    
-    if form.is_valid():
-        new_comment = form.save(commit=False)
-        new_comment.post_id = post_id
-        new_comment.user = request.user
+    if request.method == 'POST':
+        post = Post.objects.get(id=post_id)
+        form = CommentForm(request.POST)
 
-        if parent_id:
-            parent_comment = Comment.objects.get(id=parent_id)
-            new_comment.parent = parent_comment
-        new_comment.save()
-    
-    return redirect('post_detail', post_id=post_id)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.user = request.user
+            comment.post = post
+
+            parent_id = request.POST.get('parent_id')
+            if parent_id:
+                parent_comment = Comment.objects.get(id=parent_id, post=post)
+                comment.parent = parent_comment
+
+            comment.save()
+
+        return redirect('post_detail', post_id=post.id)
+
 
 
 class CommentUpdate(LoginRequiredMixin, UpdateView):
@@ -229,4 +246,9 @@ class CommentDelete(LoginRequiredMixin, DeleteView):
     def test_func(self):
         comment = self.get_object()
         return self.request.user == comment.user
+    
+def posts_by_tag(request, tag_slug):
+    tag = Tag.objects.get(slug=tag_slug)
+    posts = Post.objects.filter(tags__in=[tag])
+    return render(request, 'posts/posts_by_tag.html', {'tag': tag, 'posts': posts})   
     

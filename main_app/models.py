@@ -5,6 +5,7 @@ from storages.backends.s3 import S3File
 from storages.backends.s3boto3 import S3Boto3Storage
 from django.contrib.auth.models import User
 from django_countries.fields import CountryField
+from taggit.managers import TaggableManager
 
 class PhotoImageStorage(S3Boto3Storage):  
     location = 'postsphotos'  # This is the name of the bucket in S3
@@ -13,7 +14,7 @@ class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     body = models.TextField(max_length=500)
-    tags = models.CharField(max_length=100, blank=True)
+    tags = TaggableManager()
     created_at = models.DateTimeField(auto_now_add=True)
     country = CountryField(blank=True, null=True)
     image = models.ImageField(

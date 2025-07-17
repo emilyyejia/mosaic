@@ -5,18 +5,39 @@
   <div class="post-details">
     <h1>{{ post.title }}</h1>
     <p>{{ post.body}}</p>
-    <p>Tags: {{ post.tags}}</p>
     <p>Country: {{ post.country.name }}</p>
     {% if post.image %}
     <img src="{{ post.image.url }}" alt="{{ post.title }}" class="post-img" />
     {% endif %}
   </div>
+  <p>
+    Tags: {% for tag in post.tags.all %}
+    <span class="tag">{{ tag.name }}</span>
+    {% if not forloop.last %} No tags yet.{% endif %} {% endfor %}
+  </p>
+  <button id="translate-btn">{{ request.LANGUAGE_CODE }}</button>
+  <div id="translated-body">{{ post.body }}</div>
+
+  <script>
+    document
+      .getElementById("translate-btn")
+      .addEventListener("click", function () {
+        fetch("{% url 'get_translated_post' post.id %}")
+          .then((response) => response.json())
+          .then((data) => {
+            document.getElementById("translated-body").innerText = data.body;
+          });
+      });
+  </script>
+
   <div class="post-actions">
     {% if post.user == request.user %}
     <a href="{% url 'post-update' post.id %}">Edit</a> |
     <a href="{% url 'post-delete' post.id %}">Delete</a>
     {% endif %}
   </div>
+
+<div id="comments-section" >
   <form
     action="{% url 'add-comment' post.id %}"
     method="post"
@@ -28,40 +49,14 @@
   </form>
 <div class="comments-container">
   {% for comment in post.comment_set.all %}
-  <div class="comment-item">
-    <div class="comment-header">
-      <span class="comment-user">{{ comment.user.username }}</span>
-      <span class="comment-date">{{ comment.date|date:"M d, Y" }}</span>
-      {% if comment.user == request.user %}
-      <span class="comment-actions">
-        <a href="{% url 'comment-edit' comment.id %}">✏️</a> |
-        <a href="{% url 'comment-delete' comment.id %}">🗑️</a>
-      </span>
-      {% endif %}
-    </div>
-    <div class="comment-text">{{ comment.text }}</div>
-
-    {# Form to reply to this comment #}
-    <form method="post" action="{% url 'add-comment' post.id %}">
-      {% csrf_token %}
-      {{ comment_form.text }} {# Assuming comment_form is passed to the template and has a 'text' field #}
-      <input type="hidden" name="parent_id" value="{{ comment.id }}">
-      <button type="submit">Reply</button>
-    </form>
-
-    {# Display replies to this comment #}
-    {% for reply in comment.replies.all %}
-    <div class="reply-item">
-      ↳ <span class="comment-user">{{ reply.user.username }}</span>
-      <span class="comment-date">{{ reply.date|date:"M d, Y" }}</span>
-      <div class="comment-text">{{ reply.text }}</div>
-    </div>
-    {% endfor %}
-  </div>
-  {% empty %} {# This "empty" applies to the outer "for comment..." loop #}
-  <p>No comments yet. Be the first to comment!</p>
-  {% endfor %} {# This "endfor" closes the outer "for comment..." loop #}
+    {% if not comment.parent %}
+      {% include 'main_app/comment_item.html' with comment=comment %}
+    {% endif %}
+  {% empty %}
+    <p>No comments yet. Be the first to comment!</p>
+  {% endfor %}
 </div>
-</section>
 
-{% endblock %}
+</section>
+  {% endblock %}
+</div>

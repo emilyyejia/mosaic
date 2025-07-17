@@ -50,11 +50,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'storages',
     'django_countries',
+    'taggit',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -129,6 +131,11 @@ USE_I18N = True
 
 USE_TZ = True
 
+LANGUAGES = [
+    ('en', 'English'),
+    ('zh-hans', 'Simplified Chinese'),
+    ('fr', 'French'),
+]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
@@ -155,5 +162,8 @@ MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaw
 
 TRAVEL_SUGGESTION_API_KEY = os.environ.get('OTRAVEL_SUGGESTION_API_KEY','')
 
+
 import django_on_heroku
 django_on_heroku.settings(locals(), databases=False)
+
+TAGGIT_CASE_INSENSITIVE = True

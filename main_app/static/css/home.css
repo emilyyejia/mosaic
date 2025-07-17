@@ -8,8 +8,8 @@
 
 .home-section h1 {
   color: #0d6efd;
+  font-weight: 900;
   font-size: 2rem;
-  font-weight: bolder;
   margin-bottom: 2rem;
   font-weight: 500;
 }
@@ -69,4 +69,3 @@ form.login button.btn.submit {
 form.login button.btn.submit:hover {
   background: #0d6efd;
 }
-

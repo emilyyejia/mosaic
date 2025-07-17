@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+
 {% block head %}
 <link rel="stylesheet" href="{% static 'css/posts/user_feed.css' %}" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
@@ -24,44 +25,57 @@
 
 <section class="post-list">
   {% for post in posts %}
-    <a href="{% url 'post_detail' post.id %}" class="post-card-link">
-      <article class="post-item" style="border: 1px solid #ddd; border-radius: 10px; padding: 1em; margin-bottom: 1em; background: #fafafa;">
-        <h2>{{ post.title }}</h2>
-        <p>{{ post.body|truncatewords:25 }}</p>
-        <p><strong>Tags:</strong> {{ post.tags }}</p>
-        <p><strong>Country:</strong> {{ post.country.name }}</p>
-      </article>
-    </a>
+  <a href="{% url 'post_detail' post.id %}" class="post-card-link">
+    <article class="post-item" style="border: 1px solid #ddd; border-radius: 10px; padding: 1em; margin-bottom: 1em; background: #fafafa;">
+      <h2>{{ post.title }}</h2>
+      <p>{{ post.body|truncatewords:25 }}</p>
+      {% if post.tags.all %}
+      <p>
+        {% for tag in post.tags.all %}
+        <a href="{% url 'posts_by_tag' tag.slug %}" class="tag-link">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}
+        {% endfor %}
+      </p>
+      {% endif %}
+      <p><strong>Country:</strong> {{ post.country.name }}</p>
+      {% if post.image %}
+      <img src="{{ post.image.url }}" alt="{{ post.title }}" class="post-img" />
+      {% endif %}
+      <p>Posted by: {{ post.user.username }}</p>
+    </article>
+  </a>
   {% empty %}
-    <p>No posts available.</p>
+  <p>No posts available.</p>
   {% endfor %}
 </section>
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-  const map = L.map('map').setView([20, 0], 2);
+  document.addEventListener("DOMContentLoaded", function () {
+    const map = L.map("map").setView([20, 0], 2);
 
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors'
-  }).addTo(map);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "© OpenStreetMap contributors",
+    }).addTo(map);
 
-  const userCountries = JSON.parse(document.getElementById("userCountryData").textContent);
+    const userCountries = JSON.parse(
+      document.getElementById("userCountryData").textContent
+    );
 
-  fetch("https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson")
-    .then(res => res.json())
-    .then(data => {
-      L.geoJSON(data, {
-        style: function (feature) {
-        const isoCode = (feature.properties["ISO3166-1-Alpha-2"] || "").toUpperCase();
-        console.log("Highlighting country code:", isoCode);  
-        return {
-            color: userCountries.includes(isoCode) ? "#2a9d8f" : "#ccc",
-            fillOpacity: userCountries.includes(isoCode) ? 0.6 : 0.1,
-            weight: 1
-          };
-        }
-      }).addTo(map);
-    });
-});
+    fetch(
+      "https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson"
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        L.geoJSON(data, {
+          style: function (feature) {
+            const isoCode = (feature.properties["ISO3166-1-Alpha-2"] || "").toUpperCase();
+            return {
+              color: userCountries.includes(isoCode) ? "#2a9d8f" : "#ccc",
+              fillOpacity: userCountries.includes(isoCode) ? 0.6 : 0.1,
+              weight: 1,
+            };
+          },
+        }).addTo(map);
+      });
+  });
 </script>
 {% endblock %}
