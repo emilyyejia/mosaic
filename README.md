@@ -82,7 +82,8 @@ We created **Connectly** to bring storytelling back to the heart of social inter
 - **django-taggit** – Tagging system for posts
 - **boto3 & django-storages** – Integration with AWS S3 for media storage
 - **AWS S3** – Used for storing and serving uploaded images
-
+- **AWS EC2** – Used for hosting Ollama
+- **Deepseek** – Large language model
 ---
 
 ## 🙌 Attributions
@@ -93,8 +94,6 @@ We created **Connectly** to bring storytelling back to the heart of social inter
 ---
 
 ## 🌱 Next Steps
-
-🧑‍💻 User profile pages with bio & post history
 
 ⭐ Follow storytellers & get notifications
 
