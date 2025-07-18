@@ -18,7 +18,7 @@ from collections import Counter
 from django.conf import settings
 # Initialize the Ollama client
 from taggit.models import Tag
-from django.http import JsonResponse
+import json
 from django.conf import settings
 import requests
 def travel_advisor_search(request):
@@ -43,27 +43,48 @@ def travel_advisor_search(request):
 
     return JsonResponse(response.json(), status=response.status_code)
 
-ollama_client = ollama.Client()
 
 def get_translated_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     language_code = get_language()
-
-    if language_code.startswith('en'):  
-        translated_body = post.body
+    ollama_host = "18.222.44.36"
+    ollama_url = f"http://{ollama_host}:11434/api/generate"
+    if not language_code or language_code.startswith('en'):
+        target_language = 'zh-Hans'
     else:
-        response = ollama_client.generate(
-            model="llama3",
-            prompt=f"Translate the following to {language_code}: {post.body}",
-            stream=False
+        target_language = language_code
+
+    try:
+        response = requests.post(
+            ollama_url,
+            json={
+                "model": "deepseek-r1:1.5b",
+                "prompt": f"Translate the following to {target_language}: {post.body}"
+            },
+            stream=True,
+            timeout=30
         )
-        translated_body = response['response']
+        response.raise_for_status()
+
+        translated_body = ""
+        for line in response.iter_lines():
+            if line:
+                data = json.loads(line.decode('utf-8'))
+                translated_body += data.get("response", "")
+                if data.get("done", False):
+                    break
+
+        if not translated_body.strip():
+            translated_body = "Translation not available."
+    except Exception as e:
+        print(f"Error during Ollama API call: {e}")
+        translated_body = "Translation error."
 
     return JsonResponse({
         'title': post.title,
         'body': translated_body
     })
-    
+
 CONTINENT_COUNTRIES = {
   'Africa': [
     'DZ', 'AO', 'BJ', 'BW', 'BF', 'BI', 'CM', 'CV', 'CF', 'TD', 'KM',
