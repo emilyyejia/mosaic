@@ -84,6 +84,8 @@ We created **Connectly** to bring storytelling back to the heart of social inter
 - **AWS S3** – Used for storing and serving uploaded images
 - **AWS EC2** – Used for hosting Ollama
 - **Deepseek** – Large language model
+- **Leaflet.js** – For building interactive maps
+
 ---
 
 ## 🙌 Attributions
