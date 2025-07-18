@@ -25,7 +25,7 @@
   {% endif %}
 </button>
 
-  <div id="translated-body">{{ post.body }}</div>
+    <div id="translated-body"> </div>
 
   <script>
     document
@@ -56,16 +56,37 @@
     {% csrf_token %} {{ comment_form.text }}
     <button type="submit" class="btn submit">Add Comment</button>
   </form>
-<div class="comments-container">
-  {% for comment in post.comment_set.all %}
-    {% if not comment.parent %}
-      {% include 'main_app/comment_item.html' with comment=comment %}
-    {% endif %}
-  {% empty %}
-    <p>No comments yet. Be the first to comment!</p>
-  {% endfor %}
+
+  <div class="comments-container">
+    {% for comment in post.comment_set.all %}
+      {# START: Content that was previously in comment_item.html - ADD THIS BACK #}
+      <div class="comment-item" id="comment-{{ comment.id }}">
+        <div class="comment-header">
+          <span class="comment-user">{{ comment.user.username }}</span>
+          <span class="comment-date">{{ comment.date|date:"M d, Y" }}</span>
+          {% if comment.user == request.user %}
+          <span class="comment-actions">
+            <a href="{% url 'comment-edit' comment.id %} ">
+              <i class="fas fa-pen"></i
+            ></a>
+            <a href="{% url 'comment-delete' comment.id %}">
+              <i class="fas fa-trash"></i
+            ></a>
+          </span>
+          {% endif %}
+        </div>
+
+        <div class="comment-text">{{ comment.text }}</div>
+
+        {# No reply buttons or forms here #}
+        {# No nested loops for replies #}
+      </div>
+      {# END: Content that was previously in comment_item.html #}
+    {% empty %}
+      <p>No comments yet. Be the first to comment!</p>
+    {% endfor %}
+  </div>
 </div>
 
 </section>
-  {% endblock %}
-</div>
+{% endblock %}

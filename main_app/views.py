@@ -271,12 +271,6 @@ def add_comment(request, post_id):
             comment = form.save(commit=False)
             comment.user = request.user
             comment.post = post
-
-            parent_id = request.POST.get('parent_id')
-            if parent_id:
-                parent_comment = Comment.objects.get(id=parent_id, post=post)
-                comment.parent = parent_comment
-
             comment.save()
 
         return redirect('post_detail', post_id=post.id)
