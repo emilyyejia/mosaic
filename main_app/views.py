@@ -21,6 +21,8 @@ from taggit.models import Tag
 import json
 from django.conf import settings
 import requests
+import os
+
 def travel_advisor_search(request):
     query = request.GET.get('country')
     if not query:
@@ -47,8 +49,7 @@ def travel_advisor_search(request):
 def get_translated_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     language_code = get_language()
-    ollama_host = "18.222.44.36"
-    ollama_url = f"http://{ollama_host}:11434/api/generate"
+    ollama_api_endpoint = os.environ.get("OLLAMA_API_URL", "http://localhost:11434/api/generate")
     if not language_code or language_code.startswith('en'):
         target_language = 'zh-Hans'
     else:
@@ -56,7 +57,7 @@ def get_translated_post(request, post_id):
 
     try:
         response = requests.post(
-            ollama_url,
+            ollama_api_endpoint,
             json={
                 "model": "deepseek-r1:1.5b",
                 "prompt": f"Translate the following to {target_language}: {post.body}"
