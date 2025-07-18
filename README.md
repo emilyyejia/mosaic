@@ -35,31 +35,27 @@ We created **Connectly** to bring storytelling back to the heart of social inter
 <details>
   <summary>🏠 User Feed</summary>
 
-| ---------------------------------------------------- |
-| ![Feed](./main_app/static/images/user-feed-page.png) |
+![Feed](./main_app/static/images/user-feed-page.png)
 
 </details>
 
 <details>
   <summary>📝 Post Detail Page</summary>
 
-| ------------------------------------------------- |
-| ![Post](./main_app/static/images/post-detail.png) |
+![Post](./main_app/static/images/post-detail.png)
 
 </details>
 
 <details>
   <summary>🔎 Filter/Search</summary>
 
-| ---------------------------------------------- |
-| ![Search](./main_app/static/images/filter.png) |
+![Search](./main_app/static/images/filter.png)
 
 </details>
 <details>
   <summary>🙋‍♀️ User Profile Page</summary>
 
-| --------------------------------------------- |
-| ![User](./main_app/static/images/mypage.png) |
+![User](./main_app/static/images/mypage.png)
 
 </details>
 
@@ -91,7 +87,7 @@ We created **Connectly** to bring storytelling back to the heart of social inter
 
 ## 🙌 Attributions
 
-- **Favicon & Illustrations**: [Unsplash](https://unsplash.com)
+- **Favicon** : [Unsplash](https://unsplash.com)
 - **Icons**: [Font Awsome](https://fontawesome.com/)
 
 ---
